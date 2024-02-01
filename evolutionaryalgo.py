@@ -1,14 +1,38 @@
-import random
+import random 
 
-def main():
-    print("Hello World!")
+class Chromosome:
+    def __init__(self,chromosome):
+        self.chromosome = chromosome
+        self.fitness = self.calculate_fitness()
 
-# initialize population for evolutionary algorithm randomly or with a heuristic
-# size: size of the population
-# selection_size: size of the selection pool
-def initialize_population(size, selection_size):
-    random.seed(1)
-    population = []
+    def calculate_fitness(self):
+        pass
 
-    for i in range(selection_size):
-        population.append(random.randint(0, 1))
+    def crossover(self,other):
+        pass
+
+    def mutate(self):
+        pass
+
+class EA:
+    def __init__(self,chromosome_length,population_size):
+        self.chromosome_length = chromosome_length
+        self.population_size = population_size
+        self.population = self.init_population()
+
+    def init_population(self):
+        pass
+
+    def selection(self):
+        pass
+
+    def crossover(self):
+        pass
+
+    def mutation(self):
+        pass
+
+    def run(self):
+        pass
+
+print("Hello World Azeem!")
