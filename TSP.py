@@ -16,9 +16,13 @@ class Chromosome:
         pass
 
 class TSP(Problem):
-    def __init__(self,population_size):
-        Problem.__init__(self,population_size)
-        
+    # def __init__(self,population_size,offspring_size,generations,mutation_rate,iterations):
+    #     Problem.__init__(self,population_size,offspring_size,generations,mutation_rate,iterations)
+
+    def init_population(self):
+        self.population = []
+        for i in range(self.population_size):
+            self.population.append(self.random_chromosome())
 
     def fitness(self,chromosome):
         pass
@@ -30,19 +34,22 @@ class TSP(Problem):
         pass
 
     def random_chromosome(self):
+        #generate random chromosome from TSP set
         pass
 
 class EA:
-    def __init__(self,chromosome_length,population_size, problem):
-        self.problem = Problem()
-        self.chromosome_length = chromosome_length
+
+    def __init__(self,population_size, offsprings,generations,mutation_rate,iterations):
         self.population_size = population_size
+        self.offsprings = offsprings
+        self.generations = generations
+        self.mutation_rate = mutation_rate
+        self.iterations = iterations
         self.population = self.init_population()
 
     def run(self):
         pass
 
-EA(10, 10, TSP())
 #Class for reading file
 class ReadFile:
     def __init__(self,filename):
@@ -84,7 +91,8 @@ class ReadFile:
         return city
 
 def main():
-    x = ReadFile("qa194.tsp").read()
-    print(x)
+    data = ReadFile("qa194.tsp").read()
+    EA(30, 10, 50, 0.5, 10)
+    print(data)
 
 main()
