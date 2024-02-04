@@ -14,7 +14,6 @@ class TSP(Problem):
         self.population = []
         for i in range(self.population_size):
             self.population.append(self.random_chromosome())
-        print(self.population[0])
 
 
     def calculate_fitness(self,chromosome):
@@ -32,19 +31,16 @@ class TSP(Problem):
         total_distance += math.sqrt((self.data[-1][0] - self.data[0][0])**2 + 
                                     (self.data[-1][1] - self.data[0][1])**2)
 
-        # Fitness is the inverse of the total distance
-        fitness = 1 / total_distance
-
-        return fitness
+        return total_distance
     
     def crossover(self,chromosome, other):
         # Perform crossover to create a new chromosome from two parents
         crossover_point = np.random.randint(1, len(chromosome) - 1)
 
         # Create a new chromosome by combining parts of both parents
-        new_chromosome = np.concatenate((chromosome[:crossover_point], other.chromosome[crossover_point:]))
-
-        return new_chromosome
+        new_chromosome = list(np.concatenate((chromosome[:crossover_point], other[crossover_point:])))
+        fitness = self.calculate_fitness(new_chromosome)
+        return (new_chromosome, fitness)
 
     def mutate(self,chromosome):
         # Perform mutation by swapping two cities in the chromosome
@@ -66,14 +62,37 @@ class TSP(Problem):
         fitness = self.calculate_fitness(solution)
         chromosome = (solution,fitness)
         return chromosome
+    
+    def fitness_prop_selection(self):
+        #selects two parents using fitness proportionate selection
+        fitness_values = [x[1] for x in self.population]
+        total_fitness = sum(fitness_values)
+        probabilities = [x/total_fitness for x in fitness_values]
+        choice = np.random.choice(range(1,len(self.population)+1), 2, p=probabilities, replace=False)
+        parents = [self.population[choice[0]][0], self.population[choice[1]][0]]
+        return parents
+    
+    # def select_parents(self):
+    #     # Select parents for crossover using tournament selection
+    #     parents = []
+    #     for i in range(self.offspring_size):
+    #         tournament = random.sample(self.population, 3)
+    #         parents.append(min(tournament, key=lambda x: x[1])[0])
+
+    #     return parents
 
 class EA:
 
-    def __init__(self,population_size, offsprings,generations,mutation_rate,iterations,data):
-        TSP(population_size,offsprings,generations,mutation_rate,iterations,data)
+    def __init__(self,population_size,offsprings,generations,mutation_rate,iterations,data):
+        self.instance = TSP(population_size,offsprings,generations,mutation_rate,iterations,data)
 
     def run(self):
-        pass
+        for i in range(self.instance.generations):
+            for j in range(self.instance.offspring_size):
+                parents = self.instance.fitness_prop_selection()
+                offspring = self.instance.crossover(parents[0],parents[1])
+                self.instance.population.append(offspring)
+            break
 
 #Class for reading file
 class ReadFile:
@@ -118,7 +137,7 @@ class ReadFile:
 def main():
     data = ReadFile("qa194.tsp").read()
     # print(data[0])
-    EA(30, 10, 50, 0.5, 10,data)
+    EA(30, 10, 50, 0.5, 10,data).run()
     # print(data)
 
 main()
