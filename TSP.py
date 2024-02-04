@@ -99,6 +99,27 @@ class TSP(Problem):
             survivors = [fitness_sorted[x] for x in choice]
             return survivors
 
+    def tournament_selection(self,p=False,s=False,n=2):
+        self.tournament_size=n
+        if not p and not s:
+            print("Specify whether to use function for parent or survivor selection")
+            return 
+        #selects two parents using tournament selection
+        if p:
+            parents = [self.tournament(), self.tournament()]
+            return parents
+        if s:
+            survivors = [self.tournament() for i in range(self.population_size)]
+            return survivors
+        
+    def tournament(self):
+        rand_n = []
+        for i in range(self.tournament_size):
+            rand_n.append(random.randint(1,self.population_size))
+        players = [self.population[i-1] for i in rand_n]
+        ranking = sorted(players, key=lambda x: x[1])
+        return ranking[0]
+
 class EA:
 
     def __init__(self,population_size,offsprings,generations,mutation_rate,iterations,problem_name,parent_selection_scheme,survivor_selection_scheme,data):
@@ -180,8 +201,8 @@ def main():
     mutation_rate = 0.5
     iterations = 10
     problem = "TSP"
-    parent_selection = "rank_based_selection"
-    survivor_selection = "rank_based_selection"
+    parent_selection = "tournament_selection"
+    survivor_selection = "tournament_selection"
     EA(pop_size,offspring_size,generations_no,mutation_rate,iterations,problem,parent_selection,survivor_selection,data).run()
 
 
