@@ -120,6 +120,35 @@ class TSP(Problem):
         ranking = sorted(players, key=lambda x: x[1])
         return ranking[0]
 
+    def truncation(self,p=False,s=False):
+        if not p and not s:
+            print("Specify whether to use function for parent or survivor selection")
+            return 
+        
+        fitness_sorted = sorted(self.population, key=lambda x: x[1])
+        if p:
+            parents = [fitness_sorted[0],fitness_sorted[1]]
+            return parents
+        if s:
+            survivors = [fitness_sorted[i] for i in range(self.population_size)]
+            return survivors
+            
+    def random(self,p=False,s=False):
+        if not p and not s:
+            print("Specify whether to use function for parent or survivor selection")
+            return 
+        
+        if p:
+            choice = [random.randint(1,self.population_size)-1 for i in range(2)]
+            parents = [self.population[choice[0]],self.population[choice[1]]]
+            return parents
+        if s:
+            choice = [random.randint(1,self.population_size)-1 for i in range(self.population_size)]
+            survivors = [self.population[choice[i]] for i in choice]
+            return survivors
+
+
+
 class EA:
 
     def __init__(self,population_size,offsprings,generations,mutation_rate,iterations,problem_name,parent_selection_scheme,survivor_selection_scheme,data):
@@ -201,8 +230,8 @@ def main():
     mutation_rate = 0.5
     iterations = 10
     problem = "TSP"
-    parent_selection = "tournament_selection"
-    survivor_selection = "tournament_selection"
+    parent_selection = "random"
+    survivor_selection = "random"
     EA(pop_size,offspring_size,generations_no,mutation_rate,iterations,problem,parent_selection,survivor_selection,data).run()
 
 
