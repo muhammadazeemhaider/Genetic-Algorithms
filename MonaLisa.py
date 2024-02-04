@@ -24,15 +24,18 @@ def create_individual():
     return individual
 
 def calculate_fitness(individual, target):
+    print("Hello")
     # Calculate fitness by comparing the generated image with the target image
     # Use mean squared error or other suitable metrics
     # ...
 
 def crossover(parent1, parent2):
+    print("Hello")
     # Perform crossover to create a new individual from two parents
     # ...
 
 def mutate(individual):
+    print("Hello")
     # Mutate the individual by modifying some polygons
     # ...
 
