@@ -1,7 +1,7 @@
 import random 
 import math
 import numpy as np
-from Problem import Problem
+from problem import Problem
 
 
 class TSP(Problem):
@@ -35,10 +35,10 @@ class TSP(Problem):
     
     def crossover(self,chromosome, other):
         # Perform crossover to create a new chromosome from two parents
-        crossover_point = np.random.randint(1, len(chromosome) - 1)
+        crossover_point = np.random.randint(1, len(chromosome[0]) - 1)
 
         # Create a new chromosome by combining parts of both parents
-        new_chromosome = list(np.concatenate((chromosome[:crossover_point], other[crossover_point:])))
+        new_chromosome = list(np.concatenate((chromosome[0][:crossover_point], other[0][crossover_point:])))
         fitness = self.calculate_fitness(new_chromosome)
         return (new_chromosome, fitness)
 
@@ -63,36 +63,73 @@ class TSP(Problem):
         chromosome = (solution,fitness)
         return chromosome
     
-    def fitness_prop_selection(self):
+    def fitness_prop_selection(self,p=False,s=False):
+        if not p and not s:
+            print("Specify whether to use function for parent or survivor selection")
+            return 
         #selects two parents using fitness proportionate selection
         fitness_values = [x[1] for x in self.population]
         total_fitness = sum(fitness_values)
         probabilities = [x/total_fitness for x in fitness_values]
-        choice = np.random.choice(range(1,len(self.population)+1), 2, p=probabilities, replace=False)
-        parents = [self.population[choice[0]][0], self.population[choice[1]][0]]
-        return parents
+        if p:
+            choice = np.random.choice(range(len(self.population)), 2, p=probabilities, replace=False)
+            parents = [self.population[choice[0]], self.population[choice[1]]]
+            return parents
+        if s:
+            choice = np.random.choice(range(len(self.population)), self.population_size, p=probabilities, replace=False)
+            survivors = [self.population[x] for x in choice]
+            return survivors
     
-    # def select_parents(self):
-    #     # Select parents for crossover using tournament selection
-    #     parents = []
-    #     for i in range(self.offspring_size):
-    #         tournament = random.sample(self.population, 3)
-    #         parents.append(min(tournament, key=lambda x: x[1])[0])
-
-    #     return parents
+    def rank_based_selection(self,p=False,s=False):
+        if not p and not s:
+            print("Specify whether to use function for parent or survivor selection")
+            return 
+        #selects two parents using rank based selection
+        fitness_sorted = sorted(self.population, key=lambda x: x[1])
+        # print(fitness_sorted)
+        fitness_range = range(1,len(fitness_sorted)+1)
+        probabilities = [x/sum([y for y in fitness_range]) for x in reversed(fitness_range)]
+        # print(probabilities)
+        if p:
+            choice = np.random.choice(range(len(self.population)), 2, p=probabilities, replace=False)
+            parents = [fitness_sorted[choice[0]], fitness_sorted[choice[1]]]
+            return parents
+        if s:
+            choice = np.random.choice(range(len(self.population)), self.population_size, p=probabilities, replace=False)
+            survivors = [fitness_sorted[x] for x in choice]
+            return survivors
 
 class EA:
 
-    def __init__(self,population_size,offsprings,generations,mutation_rate,iterations,data):
-        self.instance = TSP(population_size,offsprings,generations,mutation_rate,iterations,data)
+    def __init__(self,population_size,offsprings,generations,mutation_rate,iterations,problem_name,parent_selection_scheme,survivor_selection_scheme,data):
+        self.problem_name = globals()[problem_name]
+        self.parent_selection_scheme = parent_selection_scheme
+        self.survivor_selection_scheme = survivor_selection_scheme
+        self.instance = self.problem_name(population_size,offsprings,generations,mutation_rate,iterations,data)
 
     def run(self):
-        for i in range(self.instance.generations):
-            for j in range(self.instance.offspring_size):
-                parents = self.instance.fitness_prop_selection()
-                offspring = self.instance.crossover(parents[0],parents[1])
-                self.instance.population.append(offspring)
-            break
+        top_solutions = []
+        parent_selection_function = getattr(self.instance, self.parent_selection_scheme)
+        survivor_selection_function = getattr(self.instance, self.survivor_selection_scheme)
+        if not callable(parent_selection_function) or not callable(survivor_selection_function):
+            print("Invalid selection scheme")
+            return
+        
+        for i in range(self.instance.iterations):
+            for j in range(self.instance.generations):
+                for k in range(self.instance.offspring_size):
+                    parents = parent_selection_function(p=True)
+                    offspring = self.instance.crossover(parents[0],parents[1])
+                    self.instance.population.append(offspring)
+                    # break
+                # break
+                survivors = survivor_selection_function(s=True)
+                self.instance.population = survivors
+            top_solutions.append(min(self.instance.population, key=lambda x: x[1]))
+            # break
+        x = [x[1] for x in top_solutions]
+        print("Top solutions: ", x)
+
 
 #Class for reading file
 class ReadFile:
@@ -137,7 +174,15 @@ class ReadFile:
 def main():
     data = ReadFile("qa194.tsp").read()
     # print(data[0])
-    EA(30, 10, 50, 0.5, 10,data).run()
-    # print(data)
+    pop_size = 30
+    offspring_size = 10
+    generations_no = 50
+    mutation_rate = 0.5
+    iterations = 10
+    problem = "TSP"
+    parent_selection = "rank_based_selection"
+    survivor_selection = "rank_based_selection"
+    EA(pop_size,offspring_size,generations_no,mutation_rate,iterations,problem,parent_selection,survivor_selection,data).run()
+
 
 main()
