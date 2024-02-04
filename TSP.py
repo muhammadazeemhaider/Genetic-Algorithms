@@ -1,5 +1,7 @@
 import random 
 import Problem
+import math
+import numpy as np
 
 class Chromosome:
     def __init__(self,chromosome):
@@ -7,13 +9,46 @@ class Chromosome:
         self.fitness = self.calculate_fitness()
 
     def calculate_fitness(self):
-        pass
+        total_distance = 0.0
+        num_cities = len(self.chromosome)
 
-    def crossover(self,other):
-        pass
+        for i in range(num_cities - 1):
+            # Calculate Euclidean distance between consecutive cities
+            city1 = self.chromosome[i]
+            city2 = self.chromosome[i + 1]
+            distance = math.sqrt((city2[1] - city1[1])**2 + (city2[2] - city1[2])**2)
+            total_distance += distance
+
+        # Add distance from the last city back to the starting city
+        total_distance += math.sqrt((self.chromosome[-1][1] - self.chromosome[0][1])**2 + 
+                                    (self.chromosome[-1][2] - self.chromosome[0][2])**2)
+
+        # Fitness is the inverse of the total distance
+        fitness = 1 / total_distance
+
+        return fitness
+
+    def crossover(self, other):
+        # Perform crossover to create a new chromosome from two parents
+        crossover_point = np.random.randint(1, len(self.chromosome) - 1)
+
+        # Create a new chromosome by combining parts of both parents
+        new_chromosome = np.concatenate((self.chromosome[:crossover_point], other.chromosome[crossover_point:]))
+
+        return Chromosome(new_chromosome)
 
     def mutate(self):
-        pass
+        # Perform mutation by swapping two cities in the chromosome
+        mutation_point1, mutation_point2 = np.random.choice(len(self.chromosome), 2, replace=False)
+
+        # Create a new chromosome with the cities swapped
+        new_chromosome = np.copy(self.chromosome)
+        new_chromosome[mutation_point1], new_chromosome[mutation_point2] = (
+            new_chromosome[mutation_point2],
+            new_chromosome[mutation_point1]
+        )
+
+        return Chromosome(new_chromosome)
 
 class TSP(Problem):
     # def __init__(self,population_size,offspring_size,generations,mutation_rate,iterations):
