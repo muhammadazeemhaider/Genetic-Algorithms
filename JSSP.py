@@ -185,14 +185,14 @@ class ReadFile:
 
 def main():
     data = ReadFile("abz5").read_file()
-    pop_size = 500
+    pop_size = 100
     offspring_size = 10
     generations_no = 50
     mutation_rate = 0.5
     iterations = 10
     problem = "JSSP"
-    parent_selection = "tournament_selection"
-    survivor_selection = "tournament_selection"
+    parent_selection = "fitness_prop_selection"
+    survivor_selection = "rank_based_selection"
     EA(pop_size, offspring_size, generations_no, mutation_rate, iterations, problem, parent_selection, survivor_selection, data).run()
 
 main()
