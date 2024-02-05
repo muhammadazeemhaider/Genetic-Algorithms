@@ -6,10 +6,6 @@ from problem import Problem
 
 class TSP(Problem):
 
-    # def __init__(self,population_size,offspring_size,generations,mutation_rate,iterations):
-    #     print("Initializing TSP problem...")
-    #     Problem.__init__(self,population_size,offspring_size,generations,mutation_rate,iterations)
-
     def init_population(self):
         self.population = []
         for i in range(self.population_size):
@@ -115,7 +111,7 @@ class TSP(Problem):
     def tournament(self):
         rand_n = []
         for i in range(self.tournament_size):
-            rand_n.append(random.randint(1,self.population_size))
+            rand_n.append(random.randint(1,len(self.population)))
         players = [self.population[i-1] for i in rand_n]
         ranking = sorted(players, key=lambda x: x[1])
         return ranking[0]
@@ -152,19 +148,27 @@ class TSP(Problem):
 class EA:
 
     def __init__(self,population_size,offsprings,generations,mutation_rate,iterations,problem_name,parent_selection_scheme,survivor_selection_scheme,data):
-        self.problem_name = globals()[problem_name]
+
         self.parent_selection_scheme = parent_selection_scheme
         self.survivor_selection_scheme = survivor_selection_scheme
+        
+        #calling the problem class
+        self.problem_name = globals()[problem_name]
         self.instance = self.problem_name(population_size,offsprings,generations,mutation_rate,iterations,data)
 
     def run(self):
+
         top_solutions = []
+
+        #selecting the parent and survivor selection schemes
         parent_selection_function = getattr(self.instance, self.parent_selection_scheme)
         survivor_selection_function = getattr(self.instance, self.survivor_selection_scheme)
+        #returns error if the user has selected invalid selection schemes
         if not callable(parent_selection_function) or not callable(survivor_selection_function):
             print("Invalid selection scheme")
             return
         
+        #running the EA
         for i in range(self.instance.iterations):
             for j in range(self.instance.generations):
                 for k in range(self.instance.offspring_size):
@@ -231,7 +235,7 @@ def main():
     iterations = 10
     problem = "TSP"
     parent_selection = "random"
-    survivor_selection = "random"
+    survivor_selection = "truncation"
     EA(pop_size,offspring_size,generations_no,mutation_rate,iterations,problem,parent_selection,survivor_selection,data).run()
 
 
