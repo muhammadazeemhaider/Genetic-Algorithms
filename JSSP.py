@@ -72,14 +72,6 @@ class JSSP(Problem):
         solution = np.random.permutation(self.data)
         return solution
     
-    def select_parents(self):
-        # Select parents for crossover using tournament selection
-        parents = []
-        for i in range(2):
-            tournament = np.random.choice(self.population, 3, replace=False)
-            parents.append(min(tournament, key=lambda x: x[1])[0])
-        return parents
-    
     def fitness_prop_selection(self, p=False, s=False):
         if not p and not s:
             print("Specify whether to use the function for parent or survivor selection")
