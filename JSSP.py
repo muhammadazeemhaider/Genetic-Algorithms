@@ -185,7 +185,7 @@ class ReadFile:
 
 def main():
     data = ReadFile("abz5").read_file()
-    pop_size = 30
+    pop_size = 500
     offspring_size = 10
     generations_no = 50
     mutation_rate = 0.5
