@@ -223,8 +223,8 @@ class ReadFile:
 def main():
     data = ReadFile("qa194.tsp").read()
     # print(data[0])
-    pop_size = 1000
-    offspring_size = 50
+    pop_size = 10000
+    offspring_size = 500
     generations_no = 250
     mutation_rate = 0.5
     iterations = 10
