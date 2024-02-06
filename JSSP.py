@@ -1,3 +1,4 @@
+import random
 import numpy as np
 from problem import Problem
 
@@ -54,31 +55,19 @@ class JSSP(Problem):
         fitness = self.calculate_fitness(new_chromosome)
         return (new_chromosome, fitness)
 
-    def mutate(self, chromosome):
-        # Perform mutation by swapping two jobs in the chromosome
-        mutation_point1, mutation_point2 = np.random.choice(len(chromosome), 2, replace=False)
-
-        # Create a new chromosome with the jobs swapped
-        new_chromosome = np.copy(chromosome)
-        new_chromosome[mutation_point1], new_chromosome[mutation_point2] = (
-            new_chromosome[mutation_point2],
-            new_chromosome[mutation_point1]
-        )
-
+    def mutate(self, chromosome, mutation_rate):
+        # Perform mutation by swapping two cities in the chromosome based on mutation rate
+        new_chromosome = chromosome.copy()  # Copy the chromosome to avoid modifying the original
+        for i in range(len(new_chromosome)):
+            if np.random.random() < mutation_rate:
+                mutation_point = np.random.randint(0, len(new_chromosome))
+                new_chromosome[i], new_chromosome[mutation_point] = new_chromosome[mutation_point], new_chromosome[i]
         return new_chromosome
 
     def random_chromosome(self):
         # Generate a random chromosome from JSSP set
         solution = np.random.permutation(self.data)
         return solution
-    
-    def select_parents(self):
-        # Select parents for crossover using tournament selection
-        parents = []
-        for i in range(2):
-            tournament = np.random.choice(self.population, 3, replace=False)
-            parents.append(min(tournament, key=lambda x: x[1])[0])
-        return parents
     
     def fitness_prop_selection(self, p=False, s=False):
         if not p and not s:
@@ -139,6 +128,20 @@ class JSSP(Problem):
             survivors = sorted(self.population, key=lambda x: x[1])[:self.population_size]
             return survivors
         
+    def random(self,p=False,s=False):
+        if not p and not s:
+            print("Specify whether to use function for parent or survivor selection")
+            return 
+        
+        if p:
+            choice = [random.randint(1,self.population_size)-1 for i in range(2)]
+            parents = [self.population[choice[0]],self.population[choice[1]]]
+            return parents
+        if s:
+            choice = [random.randint(1,self.population_size)-1 for i in range(self.population_size)]
+            survivors = [self.population[choice[i]] for i in choice]
+            return survivors
+        
     def survivor_selection(self):
         # Select survivors using truncation selection
         return sorted(self.population, key=lambda x: x[1])[:self.population_size]
@@ -185,14 +188,14 @@ class ReadFile:
 
 def main():
     data = ReadFile("abz5").read_file()
-    pop_size = 100
-    offspring_size = 10
-    generations_no = 50
+    pop_size = 500
+    offspring_size = 25
+    generations_no = 200
     mutation_rate = 0.5
     iterations = 10
     problem = "JSSP"
-    parent_selection = "fitness_prop_selection"
-    survivor_selection = "rank_based_selection"
+    parent_selection = "random"
+    survivor_selection = "truncation"
     EA(pop_size, offspring_size, generations_no, mutation_rate, iterations, problem, parent_selection, survivor_selection, data).run()
 
 main()
