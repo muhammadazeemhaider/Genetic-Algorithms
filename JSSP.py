@@ -1,5 +1,5 @@
 import numpy as np
-from Problem import Problem
+from problem import Problem
 
 class JSSP(Problem):
     def __init__(self, population_size, offspring_size, generations, mutation_rate, iterations, data):
