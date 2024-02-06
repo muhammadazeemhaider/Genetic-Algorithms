@@ -5,7 +5,6 @@ from Problem import Problem
 
 
 class TSP(Problem):
-
     def init_population(self):
         self.population = []
         for i in range(self.population_size):
@@ -224,9 +223,9 @@ class ReadFile:
 def main():
     data = ReadFile("qa194.tsp").read()
     # print(data[0])
-    pop_size = 500
-    offspring_size = 25
-    generations_no = 200
+    pop_size = 1000
+    offspring_size = 50
+    generations_no = 250
     mutation_rate = 0.5
     iterations = 10
     problem = "TSP"
