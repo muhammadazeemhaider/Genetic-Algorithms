@@ -5,11 +5,6 @@ from problem import Problem
 
 
 class TSP(Problem):
-    def init_population(self):
-        self.population = []
-        for i in range(self.population_size):
-            self.population.append(self.random_chromosome())
-
 
     def calculate_fitness(self,chromosome):
         total_distance = 0.0
@@ -54,130 +49,9 @@ class TSP(Problem):
         chromosome = (solution,fitness)
         return chromosome
     
-    def fitness_prop_selection(self,p=False,s=False):
-        if not p and not s:
-            print("Specify whether to use function for parent or survivor selection")
-            return 
-        #selects two parents using fitness proportionate selection
-        fitness_values = [x[1] for x in self.population]
-        total_fitness = sum(fitness_values)
-        probabilities = [x/total_fitness for x in fitness_values]
-        if p:
-            choice = np.random.choice(range(len(self.population)), 2, p=probabilities, replace=False)
-            parents = [self.population[choice[0]], self.population[choice[1]]]
-            return parents
-        if s:
-            choice = np.random.choice(range(len(self.population)), self.population_size, p=probabilities, replace=False)
-            survivors = [self.population[x] for x in choice]
-            return survivors
-    
-    def rank_based_selection(self,p=False,s=False):
-        if not p and not s:
-            print("Specify whether to use function for parent or survivor selection")
-            return 
-        #selects two parents using rank based selection
-        fitness_sorted = sorted(self.population, key=lambda x: x[1])
-        # print(fitness_sorted)
-        fitness_range = range(1,len(fitness_sorted)+1)
-        probabilities = [x/sum([y for y in fitness_range]) for x in reversed(fitness_range)]
-        # print(probabilities)
-        if p:
-            choice = np.random.choice(range(len(self.population)), 2, p=probabilities, replace=False)
-            parents = [fitness_sorted[choice[0]], fitness_sorted[choice[1]]]
-            return parents
-        if s:
-            choice = np.random.choice(range(len(self.population)), self.population_size, p=probabilities, replace=False)
-            survivors = [fitness_sorted[x] for x in choice]
-            return survivors
-
-    def tournament_selection(self,p=False,s=False,n=2):
-        self.tournament_size=n
-        if not p and not s:
-            print("Specify whether to use function for parent or survivor selection")
-            return 
-        #selects two parents using tournament selection
-        if p:
-            parents = [self.tournament(), self.tournament()]
-            return parents
-        if s:
-            survivors = [self.tournament() for i in range(self.population_size)]
-            return survivors
-        
-    def tournament(self):
-        rand_n = []
-        for i in range(self.tournament_size):
-            rand_n.append(random.randint(1,len(self.population)))
-        players = [self.population[i-1] for i in rand_n]
-        ranking = sorted(players, key=lambda x: x[1])
-        return ranking[0]
-
-    def truncation(self,p=False,s=False):
-        if not p and not s:
-            print("Specify whether to use function for parent or survivor selection")
-            return 
-        
-        fitness_sorted = sorted(self.population, key=lambda x: x[1])
-        if p:
-            parents = [fitness_sorted[0],fitness_sorted[1]]
-            return parents
-        if s:
-            survivors = [fitness_sorted[i] for i in range(self.population_size)]
-            return survivors
-            
-    def random(self,p=False,s=False):
-        if not p and not s:
-            print("Specify whether to use function for parent or survivor selection")
-            return 
-        
-        if p:
-            choice = [random.randint(1,self.population_size)-1 for i in range(2)]
-            parents = [self.population[choice[0]],self.population[choice[1]]]
-            return parents
-        if s:
-            choice = [random.randint(1,self.population_size)-1 for i in range(self.population_size)]
-            survivors = [self.population[choice[i]] for i in choice]
-            return survivors
-
-
-
-class EA:
-
-    def __init__(self,population_size,offsprings,generations,mutation_rate,iterations,problem_name,parent_selection_scheme,survivor_selection_scheme,data):
-
-        self.parent_selection_scheme = parent_selection_scheme
-        self.survivor_selection_scheme = survivor_selection_scheme
-        
-        #calling the problem class
-        self.problem_name = globals()[problem_name]
-        self.instance = self.problem_name(population_size,offsprings,generations,mutation_rate,iterations,data)
-
-    def run(self):
-
-        top_solutions = []
-
-        #selecting the parent and survivor selection schemes
-        parent_selection_function = getattr(self.instance, self.parent_selection_scheme)
-        survivor_selection_function = getattr(self.instance, self.survivor_selection_scheme)
-        #returns error if the user has selected invalid selection schemes
-        if not callable(parent_selection_function) or not callable(survivor_selection_function):
-            print("Invalid selection scheme")
-            return
-        
-        #running the EA
-        for i in range(self.instance.iterations):
-            for j in range(self.instance.generations):
-                for k in range(self.instance.offspring_size):
-                    parents = parent_selection_function(p=True)
-                    offspring = self.instance.crossover(parents[0],parents[1])
-                    self.instance.population.append(offspring)
-                    # break
-                # break
-                survivors = survivor_selection_function(s=True)
-                self.instance.population = survivors
-            top_solutions.append(min(self.instance.population, key=lambda x: x[1]))
-            # break
-        x = [x[1] for x in top_solutions]
-        print("Top solutions: ", x)
+    def read_file(self):
+        data = ReadFile(self.filename).read()
+        return data
 
 
 #Class for reading file
@@ -219,18 +93,3 @@ class ReadFile:
         city = city_data.split()
         city = (float(city[1]),float(city[2]))
         return city
-
-def main():
-    data = ReadFile("qa194.tsp").read()
-    # print(data[0])
-    pop_size = 10000
-    offspring_size = 500
-    generations_no = 250
-    mutation_rate = 0.5
-    iterations = 10
-    problem = "TSP"
-    parent_selection = "random"
-    survivor_selection = "truncation"
-    EA(pop_size,offspring_size,generations_no,mutation_rate,iterations,problem,parent_selection,survivor_selection,data).run()
-
-main()
