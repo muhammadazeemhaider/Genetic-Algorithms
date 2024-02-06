@@ -38,17 +38,13 @@ class TSP(Problem):
         fitness = self.calculate_fitness(new_chromosome)
         return (new_chromosome, fitness)
 
-    def mutate(self,chromosome):
-        # Perform mutation by swapping two cities in the chromosome
-        mutation_point1, mutation_point2 = np.random.choice(len(chromosome), 2, replace=False)
-
-        # Create a new chromosome with the cities swapped
-        new_chromosome = np.copy(chromosome)
-        new_chromosome[mutation_point1], new_chromosome[mutation_point2] = (
-            new_chromosome[mutation_point2],
-            new_chromosome[mutation_point1]
-        )
-
+    def mutate(self, chromosome, mutation_rate):
+        # Perform mutation by swapping two cities in the chromosome based on mutation rate
+        new_chromosome = chromosome.copy()  # Copy the chromosome to avoid modifying the original
+        for i in range(len(new_chromosome)):
+            if np.random.random() < mutation_rate:
+                mutation_point = np.random.randint(0, len(new_chromosome))
+                new_chromosome[i], new_chromosome[mutation_point] = new_chromosome[mutation_point], new_chromosome[i]
         return new_chromosome
 
     def random_chromosome(self):
@@ -228,15 +224,14 @@ class ReadFile:
 def main():
     data = ReadFile("qa194.tsp").read()
     # print(data[0])
-    pop_size = 30
-    offspring_size = 10
-    generations_no = 50
+    pop_size = 500
+    offspring_size = 25
+    generations_no = 200
     mutation_rate = 0.5
     iterations = 10
     problem = "TSP"
     parent_selection = "random"
     survivor_selection = "truncation"
     EA(pop_size,offspring_size,generations_no,mutation_rate,iterations,problem,parent_selection,survivor_selection,data).run()
-
 
 main()
