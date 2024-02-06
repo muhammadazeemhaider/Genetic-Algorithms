@@ -3,14 +3,12 @@ import numpy as np
 from problem import Problem
 
 class JSSP(Problem):
-    def __init__(self, population_size, offspring_size, generations, mutation_rate, iterations, data):
-        super().__init__(population_size, offspring_size, generations, mutation_rate, iterations, data)
+
+    def init_population(self):
         self.population = []  # Add this line to initialize the population attribute
         # Initialize the population with random individuals
-        for _ in range(population_size):
-            chromosome = self.random_chromosome()
-            fitness = self.calculate_fitness(chromosome)
-            self.population.append((chromosome, fitness))
+        for _ in range(self.population_size):
+            self.population.append(self.random_chromosome()) 
 
     def calculate_fitness(self, chromosome):
         # Calculate the makespan of a chromosome
@@ -67,7 +65,9 @@ class JSSP(Problem):
     def random_chromosome(self):
         # Generate a random chromosome from JSSP set
         solution = np.random.permutation(self.data)
-        return solution
+        fitness = self.calculate_fitness(solution)
+        chromosome = (solution, fitness)
+        return chromosome
     
     def fitness_prop_selection(self, p=False, s=False):
         if not p and not s:
@@ -109,12 +109,20 @@ class JSSP(Problem):
             print("Specify whether to use the function for parent or survivor selection")
             return
         if p:
-            parents = [self.population[index] for index in np.random.choice(range(len(self.population)), 2, replace=False)]
+            parents = [self.tournament(), self.tournament()]
             return parents
         if s:
-            survivors = [self.population[index] for index in np.random.choice(range(len(self.population)), self.tournament_size, replace=False)]
+            survivors = [self.tournament()]
             return survivors
         
+    def tournament(self):
+        rand_n = []
+        for i in range(self.tournament_size):
+            rand_n.append(random.randint(1,len(self.population)))
+        players = [self.population[i-1] for i in rand_n]
+        ranking = sorted(players, key=lambda x: x[1])
+        return ranking[0]
+
     def truncation(self, p=False, s=False):
         if not p and not s:
             print("Specify whether to use the function for parent or survivor selection")
@@ -141,10 +149,7 @@ class JSSP(Problem):
             choice = [random.randint(1,self.population_size)-1 for i in range(self.population_size)]
             survivors = [self.population[choice[i]] for i in choice]
             return survivors
-        
-    def survivor_selection(self):
-        # Select survivors using truncation selection
-        return sorted(self.population, key=lambda x: x[1])[:self.population_size]
+    
     
 class EA: 
     def __init__(self, population_size, offspring_size, generations, mutation_rate, iterations, problem_name, parent_selection_scheme, survivor_selection_scheme, data):
