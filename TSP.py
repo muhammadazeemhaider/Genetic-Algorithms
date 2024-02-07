@@ -22,25 +22,38 @@ class TSP(Problem):
 
         return total_distance
     
-    def crossover(self,chromosome, other):
+    def crossover(self,parent1, parent2):
         # Perform crossover to create a new chromosome from two parents
-        crossover_point = np.random.randint(1, len(chromosome[0]) - 1)
+        crossover_point = np.random.randint(1, len(parent1[0]) - 1)
 
         # Create a new chromosome by combining parts of both parents
-        new_chromosome1 = list(np.concatenate((chromosome[0][:crossover_point], other[0][crossover_point:])))
-        new_chromosome2 = list(np.concatenate((other[0][:crossover_point], chromosome[0][crossover_point:])))
+        first_half = parent1[0][:crossover_point]
+        second_half = parent2[0][crossover_point:]
+        new_chromosome1 = first_half + [x for x in second_half if x not in first_half]
+        self.insert_missing(parent1,new_chromosome1)
+
+        first_half = parent2[0][:crossover_point]
+        second_half = parent1[0][crossover_point:]
+        new_chromosome2 = first_half + [x for x in second_half if x not in first_half]
+        self.insert_missing(parent2,new_chromosome2)
+
         fitness1 = self.calculate_fitness(new_chromosome1)
         fitness2 = self.calculate_fitness(new_chromosome2)
         offsprings = [(new_chromosome1,fitness1),(new_chromosome2,fitness2)]
         return offsprings
 
-    def mutate(self, chromosome, mutation_rate):
+    def mutate(self, chromosome):
         # Perform mutation by swapping two cities in the chromosome based on mutation rate
-        new_chromosome = chromosome.copy()  # Copy the chromosome to avoid modifying the original
-        for i in range(len(new_chromosome)):
-            if np.random.random() < mutation_rate:
-                mutation_point = np.random.randint(0, len(new_chromosome))
-                new_chromosome[i], new_chromosome[mutation_point] = new_chromosome[mutation_point], new_chromosome[i]
+        new_chromosome = chromosome[0].copy() 
+
+        r = np.random.random() < self.mutation_rate
+        if r < self.mutation_rate:
+            mutation_point = np.random.randint(0, len(new_chromosome))
+            new_chromosome = new_chromosome[mutation_point:] + [x for x in new_chromosome[:mutation_point] if x not in new_chromosome[mutation_point:]]
+        self.insert_missing(chromosome,new_chromosome)
+
+        fitness = self.calculate_fitness(new_chromosome)
+        new_chromosome = (new_chromosome,fitness)
         return new_chromosome
 
     def random_chromosome(self):
@@ -50,6 +63,17 @@ class TSP(Problem):
         fitness = self.calculate_fitness(solution)
         chromosome = (solution,fitness)
         return chromosome
+    
+    def insert_missing(self,chromosome,new_chromosome):
+        missing = []
+        for i in range(1,len(chromosome[0])+1):
+            if i not in new_chromosome:
+                # index = random.randint(0,len(new_chromosome)-1)
+                # new_chromosome.insert(index,i)
+                new_chromosome.append(i)
+                missing.append(i)
+        np.random.shuffle(missing)
+        # new_chromosome.extend(missing) 
     
     def read_file(self):
         data = ReadFile(self.filename).read()
@@ -95,3 +119,5 @@ class ReadFile:
         city = city_data.split()
         city = (float(city[1]),float(city[2]))
         return city
+
+
