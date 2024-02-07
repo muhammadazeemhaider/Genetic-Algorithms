@@ -1,8 +1,7 @@
 import random 
 import math
 import numpy as np
-from problem import Problem
-
+from Problem import Problem
 
 class TSP(Problem):
 

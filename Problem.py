@@ -100,12 +100,3 @@ class Problem():
             choice = [random.randint(1,self.population_size)-1 for i in range(self.population_size)]
             survivors = [self.population[choice[i]] for i in choice]
             return survivors
-
-    def calculate_fitness(self, chromosome):
-        pass 
-        
-    def random_chromosome(self):
-        pass
-
-    def read_file(self):
-        pass
