@@ -68,6 +68,7 @@ class JSSP(Problem):
         # //TODO: Implement random_chromosome
         random.shuffle(jobs)
 
+        # //TODO: un-linearize the chromosome
         solution = [pair for job in jobs for pair in job]
 
         fitness = self.calculate_fitness(solution)
