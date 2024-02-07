@@ -1,5 +1,5 @@
 import random
-from Problem import Problem
+from problem import Problem
 
 class JSSP(Problem):
 

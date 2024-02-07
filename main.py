@@ -1,6 +1,19 @@
 import sys
 from EA import EA
 
+def main_test():
+    problem = "TSP"
+    filename = "qa194.tsp"
+    parent_selection = "fitness_prop_selection"
+    survivor_selection = "rank_based_selection"
+    pop_size = 30
+    offspring_size = 10
+    generations_no = 50
+    mutation_rate = 0.5
+    iterations = 10
+    EA(pop_size, offspring_size, generations_no, mutation_rate, iterations, problem, parent_selection, survivor_selection, filename).run()
+
+
 def main():
     problem = sys.argv[1]
     filename = sys.argv[2]
@@ -26,4 +39,9 @@ def selection_scheme(scheme):
         size = scheme.split("_")[-1]
         return "tournament_selection_" + size
 
-main()
+# main()
+
+if sys.argv[1] == "test":
+    main_test()
+else:
+    main()
