@@ -25,7 +25,7 @@ class JSSP(Problem):
                 machine_end_times[j] = end_time
                 job_end_times[i] = end_time
         return max(machine_end_times)
-
+    
     def crossover(self, chromosome_tuple, other_tuple):
         # Extract chromosomes from tuples
         chromosome = np.array(chromosome_tuple[0])
@@ -69,4 +69,3 @@ class JSSP(Problem):
             data = [x.split() for x in data]
             data = [[int(y) for y in x] for x in data]
         return data
-

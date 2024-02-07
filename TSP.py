@@ -28,9 +28,12 @@ class TSP(Problem):
         crossover_point = np.random.randint(1, len(chromosome[0]) - 1)
 
         # Create a new chromosome by combining parts of both parents
-        new_chromosome = list(np.concatenate((chromosome[0][:crossover_point], other[0][crossover_point:])))
-        fitness = self.calculate_fitness(new_chromosome)
-        return (new_chromosome, fitness)
+        new_chromosome1 = list(np.concatenate((chromosome[0][:crossover_point], other[0][crossover_point:])))
+        new_chromosome2 = list(np.concatenate((other[0][:crossover_point], chromosome[0][crossover_point:])))
+        fitness1 = self.calculate_fitness(new_chromosome1)
+        fitness2 = self.calculate_fitness(new_chromosome2)
+        offsprings = [(new_chromosome1,fitness1),(new_chromosome2,fitness2)]
+        return offsprings
 
     def mutate(self, chromosome, mutation_rate):
         # Perform mutation by swapping two cities in the chromosome based on mutation rate

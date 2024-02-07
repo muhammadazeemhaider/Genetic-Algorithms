@@ -25,7 +25,5 @@ def selection_scheme(scheme):
     elif "ts" in scheme:
         size = scheme.split("_")[-1]
         return "tournament_selection_" + size
-    
-
 
 main()

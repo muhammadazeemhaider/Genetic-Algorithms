@@ -32,12 +32,15 @@ class EA:
         
         for i in range(self.instance.iterations):
             for j in range(self.instance.generations):
-                for k in range(self.instance.offspring_size):
+                for k in range(0,self.instance.offspring_size,2):
                     parents = parent_selection_function(p=True)
-                    offspring = self.instance.crossover(parents[0], parents[1])
-                    self.instance.population.append(offspring)
+                    offsprings = self.instance.crossover(parents[0], parents[1])
+                    # offspring = self.instance.mutate(offspring[0], self.instance.mutation_rate)
+                    self.instance.population.append(offsprings[0])
+                    self.instance.population.append(offsprings[1])
                 survivors = survivor_selection_function(s=True)
                 self.instance.population = survivors
             top_solutions.append(min(self.instance.population, key=lambda x: x[1]))
+            self.instance.init_population()
         x = [x[1] for x in top_solutions]
         print("Top solutions: ", x)
