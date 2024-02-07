@@ -18,7 +18,7 @@ class Problem():
         # Initialize the population with random individuals
         for _ in range(self.population_size):
             self.population.append(self.random_chromosome()) 
-        # print(self.population[0])
+        print(self.population[0])
 
     
     def fitness_prop_selection(self, p=False, s=False):

@@ -65,6 +65,7 @@ class JSSP(Problem):
                 job.append((machine_number, processing_time))
             jobs.append(job)
 
+        # //TODO: Implement random_chromosome
         random.shuffle(jobs)
 
         solution = [pair for job in jobs for pair in job]
