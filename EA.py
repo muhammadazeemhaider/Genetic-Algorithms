@@ -31,7 +31,7 @@ class EA:
             return
         
         for i in range(self.instance.iterations):
-            print("Iteration: ", i+1)
+            # print("Iteration: ", i+1)
             for j in range(self.instance.generations):
                 for k in range(0,self.instance.offspring_size,2):
                     parents = parent_selection_function(p=True)
@@ -39,8 +39,8 @@ class EA:
                     # offspring = self.instance.mutate(offspring[0], self.instance.mutation_rate)
                     self.instance.population.append(self.instance.mutate(offsprings[0]))
                     self.instance.population.append(self.instance.mutate(offsprings[1]))
-                    # self.instance.population.append(offsprings[0])
-                    # self.instance.population.append(offsprings[1])
+                    self.instance.population.append(offsprings[0])
+                    self.instance.population.append(offsprings[1])
                 survivors = survivor_selection_function(s=True)
                 self.instance.population = survivors
                 # if(j%100==0):
@@ -50,5 +50,5 @@ class EA:
             top_solutions.append(min(self.instance.population, key=lambda x: x[1]))
             self.instance.init_population()
         x = [x[1] for x in top_solutions]
-        print("Top solution overall: ", top_solutions[x.index(min(x))])
-        print("bruh",len(top_solutions[x.index(min(x))][0]))
+        # print("Top solution overall: ", top_solutions[x.index(min(x))])
+        # print("bruh",len(top_solutions[x.index(min(x))][0]))
