@@ -7,11 +7,22 @@ class JSSP(Problem):
     def calculate_fitness(self, chromosome):
         # Calculate the makespan of a chromosome
         num_jobs, num_machines, job_data = self.read_file()
-        # print("print num_jobs",num_jobs)
-        # print("print num_machines",num_machines)
         job_end_times = [0] * num_jobs
+        
+        # Ensure that chromosome has the correct dimensions
+        if len(chromosome) != num_jobs:
+            raise ValueError("Chromosome length does not match the number of jobs")
+        
         for i in range(num_jobs):
+            # Ensure that each job in the chromosome has the correct number of machines
+            if len(chromosome[i]) != num_machines:
+                raise ValueError(f"Chromosome does not have the expected number of machines for job {i}")
+            
             for j in range(num_machines):
+                # Ensure that each machine for a job has the expected structure
+                if len(chromosome[i][j]) != 2:
+                    raise ValueError(f"Invalid machine structure in chromosome for job {i}, machine {j}")
+                
                 # Calculate start time for each job on each machine
                 if i == 0 and j == 0:
                     start_time = 0
@@ -21,46 +32,65 @@ class JSSP(Problem):
                     start_time = job_end_times[i]
                 else:
                     start_time = max(job_end_times[i - 1], job_end_times[i])
+                
                 # Calculate end time for each job on each machine
-                # print("printing the error value", chromosome[i][j][1])
                 end_time = start_time + chromosome[i][j][1]
                 job_end_times[i] = end_time
+        
         return max(job_end_times)
 
+
+    def make_unique(self, chromosome):
+        # Ensure uniqueness of jobs in the chromosome
+        seen = set()
+        unique_chromosome = []
+        for job in chromosome:
+            job_tuple = tuple(job)  # Convert the list to a tuple
+            if job_tuple not in seen:
+                unique_chromosome.append(job)
+                seen.add(job_tuple)
+        return unique_chromosome
     
-    def crossover(self,parent1, parent2):
+    def crossover(self, parent1, parent2):
         # Perform crossover to create a new chromosome from two parents
-        crossover_point = np.random.randint(1, len(parent1[0]) - 1)
+        num_jobs = len(parent1[0])
+        crossover_point = np.random.randint(1, num_jobs)
 
         # Create a new chromosome by combining parts of both parents
-        first_half = parent1[0][:crossover_point]
-        second_half = parent2[0][crossover_point:]
-        new_chromosome1 = first_half + [x for x in second_half if x not in first_half]
-        self.insert_missing(parent1,new_chromosome1)
+        new_chromosome1 = parent1[0][:crossover_point] + parent2[0][crossover_point:]
+        new_chromosome2 = parent2[0][:crossover_point] + parent1[0][crossover_point:]
 
-        first_half = parent2[0][:crossover_point]
-        second_half = parent1[0][crossover_point:]
-        new_chromosome2 = first_half + [x for x in second_half if x not in first_half]
-        self.insert_missing(parent2,new_chromosome2)
+        # Ensure uniqueness of jobs in each chromosome
+        new_chromosome1 = self.make_unique(new_chromosome1)
+        new_chromosome2 = self.make_unique(new_chromosome2)
+        
+        # Check the shape of the new chromosomes
+        print("Shape of new chromosome 1:", len(new_chromosome1))
+        print("Shape of new chromosome 2:", len(new_chromosome2))
 
         fitness1 = self.calculate_fitness(new_chromosome1)
         fitness2 = self.calculate_fitness(new_chromosome2)
-        offsprings = [(new_chromosome1,fitness1),(new_chromosome2,fitness2)]
+        offsprings = [(new_chromosome1, fitness1), (new_chromosome2, fitness2)]
+        # print(offsprings[0][0])
         return offsprings
 
     def mutate(self, chromosome):
         # Perform mutation by swapping two jobs in the chromosome based on mutation rate
         jobs = chromosome[0].copy()  # Extract the jobs from the chromosome tuple
+        num_jobs = len(jobs)
 
-        r = np.random.random() < self.mutation_rate
-        if r < self.mutation_rate:
-            job_index = np.random.randint(0, len(jobs))
-            job_swap_index = np.random.randint(0, len(jobs))
-            jobs[job_index], jobs[job_swap_index] = jobs[job_swap_index], jobs[job_index]
+        if np.random.random() < self.mutation_rate:
+            # Randomly select two different jobs to swap
+            job_index1, job_index2 = np.random.choice(num_jobs, 2, replace=False)
+            # Swap the jobs
+            jobs[job_index1], jobs[job_index2] = jobs[job_index2], jobs[job_index1]
+
+        # Ensure uniqueness of jobs in the chromosome
+        jobs = self.make_unique(jobs)
 
         # Recalculate fitness for the mutated chromosome
         fitness = self.calculate_fitness(jobs)
-        
+
         # Return the mutated chromosome as a tuple containing the jobs and their fitness
         return (jobs, fitness)
 
@@ -78,16 +108,8 @@ class JSSP(Problem):
         fitness = self.calculate_fitness(jobs)
 
         chromosome = (jobs, fitness)
-        print(chromosome[0])
+        # print(chromosome[0])
         return chromosome
-    
-    def insert_missing(self,chromosome,new_chromosome):
-        missing = []
-        for i in range(1,len(chromosome[0])+1):
-            if i not in new_chromosome:
-                new_chromosome.append(i)
-                missing.append(i)
-        np.random.shuffle(missing)
 
     def read_file(self):
         with open(self.filename, 'r') as file:
