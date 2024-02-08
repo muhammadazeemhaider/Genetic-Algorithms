@@ -6,8 +6,9 @@ class JSSP(Problem):
 
     def calculate_fitness(self, chromosome):
         # Calculate the makespan of a chromosome
-        num_jobs = len(chromosome[0])
-        num_machines = len(chromosome[0][0])
+        num_jobs, num_machines, job_data = self.read_file()
+        # print("print num_jobs",num_jobs)
+        # print("print num_machines",num_machines)
         job_end_times = [0] * num_jobs
         for i in range(num_jobs):
             for j in range(num_machines):
@@ -21,6 +22,7 @@ class JSSP(Problem):
                 else:
                     start_time = max(job_end_times[i - 1], job_end_times[i])
                 # Calculate end time for each job on each machine
+                # print("printing the error value", chromosome[i][j][1])
                 end_time = start_time + chromosome[i][j][1]
                 job_end_times[i] = end_time
         return max(job_end_times)
@@ -64,19 +66,19 @@ class JSSP(Problem):
 
     def random_chromosome(self):
         jobs = []
-        for job_data in self.data:
+        # print("printing data", self.data[2])
+        for job_data in self.data[2]:
             job = []
-            machines = list(range(len(job_data) // 2))  # List of machine indices for this job
-            random.shuffle(machines)  # Shuffle the order of machines
-            for i in range(0, len(job_data), 2):  # Iterate over pairs of elements in the job data
-                machine_number = machines[i // 2]
-                processing_time = job_data[i + 1]
-                job.append((machine_number, processing_time))
+            machines_and_times = list(zip(job_data[::2], job_data[1::2]))  # Create pairs of machine and time
+            random.shuffle(machines_and_times)  # Shuffle pairs of machine and time
+            for machine, processing_time in machines_and_times:
+                job.append((machine, processing_time))
             jobs.append(job)
 
         fitness = self.calculate_fitness(jobs)
 
         chromosome = (jobs, fitness)
+        print(chromosome[0])
         return chromosome
     
     def insert_missing(self,chromosome,new_chromosome):
@@ -89,9 +91,10 @@ class JSSP(Problem):
 
     def read_file(self):
         with open(self.filename, 'r') as file:
-            data = file.readlines()
-            data = data[1:]
+            lines = file.readlines()
+            num_jobs, num_machines = map(int, lines[0].split())
+            data = lines[1:]
             data = [x.strip() for x in data]
             data = [x.split() for x in data]
             data = [[int(y) for y in x] for x in data]
-        return data
+        return num_jobs, num_machines, data
