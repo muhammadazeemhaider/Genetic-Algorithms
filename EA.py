@@ -1,5 +1,6 @@
 from JSSP import JSSP
 from TSP import TSP
+from MonaLisa import MonaLisa
 import matplotlib.pyplot as plt
 
 class EA: 
@@ -30,7 +31,7 @@ class EA:
         if not callable(parent_selection_function) or not callable(survivor_selection_function):
             print("Invalid selection scheme")
             return
-        
+
         for i in range(self.instance.iterations):
             for j in range(self.instance.generations):
                 for k in range(0,self.instance.offspring_size,2):

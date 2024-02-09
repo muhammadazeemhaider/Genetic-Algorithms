@@ -2,15 +2,15 @@ import sys
 from EA import EA
 
 def main_test():
-    problem = "TSP"
-    filename = "qa194.tsp"
-    parent_selection = "fitness_prop_selection"
+    problem = "MonaLisa"
+    filename = "mona_lisa.jpg"
+    parent_selection = "truncation"
     survivor_selection = "truncation"
     pop_size = 1
     offspring_size = 1
     generations_no = 1
     mutation_rate = 0.5
-    iterations = 10
+    iterations = 1
     EA(pop_size, offspring_size, generations_no, mutation_rate, iterations, problem, parent_selection, survivor_selection, filename).run()
 
 
