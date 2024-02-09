@@ -47,11 +47,11 @@ class EA:
             top_solutions.append(min(self.instance.population, key=lambda x: x[1]))
             self.instance.init_population()
         
-        # Plot the line graph
+        # Plot the bar graph
         x = list(range(1, self.iterations + 1))  # x-axis values
         y = [solution[1] for solution in top_solutions]  # y-axis values
-        plt.plot(x, y)
-        plt.xlabel('Iteration')
-        plt.ylabel('Fitness')
-        plt.title('Fitness over Iterations')
+        plt.bar(x, y)
+        plt.xlabel('Iterations')
+        plt.ylabel('Fitness Value')
+        plt.title('Best Fitness value over Iterations')
         plt.show()
