@@ -1,5 +1,6 @@
 from JSSP import JSSP
 from TSP import TSP
+import matplotlib.pyplot as plt
 
 class EA: 
     def __init__(self, population_size, offspring_size, generations, mutation_rate, iterations, problem_name, parent_selection_scheme, survivor_selection_scheme, filename):
@@ -7,6 +8,7 @@ class EA:
         self.parent_selection_scheme = parent_selection_scheme
         self.survivor_selection_scheme = survivor_selection_scheme
         self.instance = self.problem_name(population_size, offspring_size, generations, mutation_rate, iterations, filename)
+        self.iterations = iterations  # Store the number of iterations
 
     def run(self):
         top_solutions = []
@@ -22,7 +24,6 @@ class EA:
             tn_size = self.survivor_selection_scheme.split("_")[-1]
             self.instance.tournament_size = int(tn_size)
             self.survivor_selection_scheme = ssf
-        
 
         parent_selection_function = getattr(self.instance, self.parent_selection_scheme)
         survivor_selection_function = getattr(self.instance, self.survivor_selection_scheme)
@@ -31,24 +32,26 @@ class EA:
             return
         
         for i in range(self.instance.iterations):
-            # print("Iteration: ", i+1)
             for j in range(self.instance.generations):
                 for k in range(0,self.instance.offspring_size,2):
                     parents = parent_selection_function(p=True)
                     offsprings = self.instance.crossover(parents[0], parents[1])
-                    # offspring = self.instance.mutate(offspring[0], self.instance.mutation_rate)
                     self.instance.population.append(self.instance.mutate(offsprings[0]))
                     self.instance.population.append(self.instance.mutate(offsprings[1]))
                     self.instance.population.append(offsprings[0])
                     self.instance.population.append(offsprings[1])
                 survivors = survivor_selection_function(s=True)
                 self.instance.population = survivors
-                # if(j%100==0):
                 print("Generation: ", j+1)
                 print("Top solution for this iteration: ", min(self.instance.population, key=lambda x: x[1])[1])
-            # print("Top solution: ", min(self.instance.population, key=lambda x: x[1]))
             top_solutions.append(min(self.instance.population, key=lambda x: x[1]))
             self.instance.init_population()
-        x = [x[1] for x in top_solutions]
-        # print("Top solution overall: ", top_solutions[x.index(min(x))])
-        # print("bruh",len(top_solutions[x.index(min(x))][0]))
+        
+        # Plot the bar graph
+        x = list(range(1, self.iterations + 1))  # x-axis values
+        y = [solution[1] for solution in top_solutions]  # y-axis values
+        plt.bar(x, y)
+        plt.xlabel('Iterations')
+        plt.ylabel('Fitness Value')
+        plt.title('Best Fitness value over Iterations')
+        plt.show()
