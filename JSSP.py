@@ -4,41 +4,59 @@ from problem import Problem
 
 class JSSP(Problem):
 
-    def calculate_fitness(self, chromosome):
-        # Calculate the makespan of a chromosome
-        num_jobs, num_machines, job_data = self.read_file()
-        job_end_times = [0] * num_jobs
+    # def calculate_fitness(self, chromosome, machine_data):
+    #     # Calculate the makespan of a chromosome
+    #     num_jobs, num_machines, job_data = self.read_file()
+    #     print("printing data", chromosome)
+    #     print("printing machine",machine_data)
+    #     job_end_times = [0] * num_jobs
         
-        # Ensure that chromosome has the correct dimensions
-        if len(chromosome) != num_jobs:
-            raise ValueError("Chromosome length does not match the number of jobs")
+    #     # Ensure that chromosome has the correct dimensions
+    #     if len(chromosome) != num_jobs:
+    #         raise ValueError("Chromosome length does not match the number of jobs")
         
-        for i in range(num_jobs):
-            # Ensure that each job in the chromosome has the correct number of machines
-            if len(chromosome[i]) != num_machines:
-                raise ValueError(f"Chromosome does not have the expected number of machines for job {i}")
+    #     for i in range(num_jobs):
+    #         # Ensure that each job in the chromosome has the correct number of machines
+    #         if len(chromosome[i]) != num_machines:
+    #             raise ValueError(f"Chromosome does not have the expected number of machines for job {i}")
             
-            for j in range(num_machines):
-                # Ensure that each machine for a job has the expected structure
-                if len(chromosome[i][j]) != 2:
-                    raise ValueError(f"Invalid machine structure in chromosome for job {i}, machine {j}")
+    #         for j in range(num_machines):
+    #             # Ensure that each machine for a job has the expected structure
+    #             if len(chromosome[i][j]) != 2:
+    #                 raise ValueError(f"Invalid machine structure in chromosome for job {i}, machine {j}")
                 
-                # Calculate start time for each job on each machine
-                if i == 0 and j == 0:
-                    start_time = 0
-                elif j == 0:
-                    start_time = job_end_times[i - 1]
-                elif i == 0:
-                    start_time = job_end_times[i]
-                else:
-                    start_time = max(job_end_times[i - 1], job_end_times[i])
+    #             # Calculate start time for each job on each machine
+    #             if i == 0 and j == 0:
+    #                 start_time = 0
+    #             elif j == 0:
+    #                 start_time = job_end_times[i - 1]
+    #             elif i == 0:
+    #                 start_time = job_end_times[i]
+    #             else:
+    #                 start_time = max(job_end_times[i - 1], job_end_times[i])
                 
-                # Calculate end time for each job on each machine
-                end_time = start_time + chromosome[i][j][1]
-                job_end_times[i] = end_time
+    #             # Calculate end time for each job on each machine
+    #             end_time = start_time + chromosome[i][j][1]
+    #             job_end_times[i] = end_time
         
-        return max(job_end_times)
+    #     return max(job_end_times)
 
+    # def calculate_fitness(self, chromosome):
+
+    #     num_jobs, num_machines, job_data = self.read_file()
+    #     print("printing data", chromosome)
+    #     machine_data = dict()
+    #     for i in range(len(chromosome[0])):
+    #         for idx,j in enumerate(chromosome):
+    #             if j[i][0] in machine_data:
+    #                 machine_data[j[i][0]].append((idx,j[i][1]))
+    #             else:
+    #                 machine_data[j[i][0]] = [(idx,j[i][1])]
+
+    #     print("printing machine",machine_data)
+    #     job_end_times = [0] * num_jobs
+    #     for job in chromosome:
+            
 
     def make_unique(self, chromosome):
         # Ensure uniqueness of jobs in the chromosome
@@ -118,5 +136,6 @@ class JSSP(Problem):
             data = lines[1:]
             data = [x.strip() for x in data]
             data = [x.split() for x in data]
-            data = [[int(y) for y in x] for x in data]
-        return num_jobs, num_machines, data
+            job_data = [[int(y) for y in x] for x in data]
+
+        return num_jobs, num_machines, job_data

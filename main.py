@@ -6,9 +6,9 @@ def main_test():
     filename = "abz5"
     parent_selection = "fitness_prop_selection"
     survivor_selection = "truncation"
-    pop_size = 100
-    offspring_size = 20
-    generations_no = 50
+    pop_size = 1
+    offspring_size = 1
+    generations_no = 1
     mutation_rate = 0.5
     iterations = 1
     EA(pop_size, offspring_size, generations_no, mutation_rate, iterations, problem, parent_selection, survivor_selection, filename).run()
