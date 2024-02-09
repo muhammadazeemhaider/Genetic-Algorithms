@@ -18,7 +18,7 @@
 
 \pagestyle{fancy}
 \fancyhf{} % Clear all header and footer fields
-\fancyhead[R]{Optimizing Cleaning Paths for Robots in Domestic Settings} % Add this line to set the header on the right side
+\fancyhead[R]{Evolutionary Algorithms} % Add this line to set the header on the right side
 \renewcommand{\headrulewidth}{0pt} % Remove the horizontal line in the header
 
 % Define section numbering format
@@ -53,5 +53,22 @@
 \thispagestyle{empty} % No page number on index page
 \tableofcontents
 \clearpage
+
+\section{Introduction}
+The first assignment of the course Computational Intelligence (CS-451) required us to implement evolutionary algorithms for three problems which are as followed:
+
+\begin{enumerate}
+    \item \textbf{Travelling Salesman Problem:} The Travelling Salesman Problem (TSP) is a classic problem in combinatorial optimization. It is the problem of finding a tour of a set of n cities that is of minimum cost. A tour is a permutation of the cities, and the cost of a tour is the sum of the distances between adjacent cities in the tour.
+    \item \textbf{Job-Shop Scheduling Problem:} The job-shop scheduling problem is a classic problem in combinatorial optimization. It is the problem of scheduling a set of n jobs on a set of m machines. Each job consists of a sequence of operations, each of which must be processed on a specific machine for a specific amount of time.
+    \item \textbf{Evolutionary Art (Mona Lisa):} The evolutionary art problem is a classic problem in evolutionary computation. It is the problem of evolving a population of images to match a target image. Each image in the population is represented as a string of genes, and the fitness of an image is the similarity between the image and the target image.
+\end{enumerate}
+
+\section{Travelling Salesman Problem}
+
+The travelling salesman problem requires finding of the minimum cost (distance) to cover all the cities. The \textbf{chromosome generation} is being carried out by randomly shuffling the cities of the Qatar dataset. 
+
+Furthermore, the \textbf{mutate function} assigns each chromosome a random number from 0 to 1, and if the number is less than the mutation rate, mutation occurs. 
+
+Finally, the \textbf{crossover function} once again, carries out crossover between two parents by assigning the crossover point, and all the repeated cities from the second parent, that are already added in the first part, are added linearly in the end. 
 
 \end{document}
