@@ -66,9 +66,28 @@ The first assignment of the course Computational Intelligence (CS-451) required 
 \section{Travelling Salesman Problem}
 
 The travelling salesman problem requires finding of the minimum cost (distance) to cover all the cities. The \textbf{chromosome generation} is being carried out by randomly shuffling the cities of the Qatar dataset. 
-
+\newline \\
 Furthermore, the \textbf{mutate function} assigns each chromosome a random number from 0 to 1, and if the number is less than the mutation rate, mutation occurs. 
-
+\newline \\
 Finally, the \textbf{crossover function} once again, carries out crossover between two parents by assigning the crossover point, and all the repeated cities from the second parent, that are already added in the first part, are added linearly in the end. 
+
+\subsection{Analysis}
+
+While carrying out initial combination for selection schemes for parent selection and survival selection, it was clear that a combination of an explorative scheme as a parent selection and an exploitative scheme as a survival selection would be the best. As a result, two main combinations that were tested were the following:
+
+    \begin{enumerate}
+        \item \textbf{Parent Selection:} Random \textbf{Survival Selection:} truncation
+        \item \textbf{Parent Selection:} tournament selection \textbf{Survival Selection:} truncation
+    \end{enumerate}
+
+The two combinations were rAn on the following parameters:
+
+    \begin{enumerate}
+        \item \textbf{Population Size:} 1000
+        \item \textbf{Offspring Size:} 200
+        \item \textbf{Number of Generations:} 5000
+        \item \textbf{Mutation Rate:} 0.45
+        \item \textbf{Iterations:} 10
+    \end{enumerate}
 
 \end{document}
