@@ -2,8 +2,8 @@ import sys
 from EA import EA
 
 def main_test():
-    problem = "TSP"
-    filename = "qa194.tsp"
+    problem = "JSSP"
+    filename = "abz5"
     parent_selection = "tournament_selection_2"
     survivor_selection = "fitness_prop_selection"
     pop_size = 30

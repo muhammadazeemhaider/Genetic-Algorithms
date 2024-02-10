@@ -4,138 +4,135 @@ from problem import Problem
 
 class JSSP(Problem):
 
-    # def calculate_fitness(self, chromosome, machine_data):
-    #     # Calculate the makespan of a chromosome
-    #     num_jobs, num_machines, job_data = self.read_file()
-    #     print("printing data", chromosome)
-    #     print("printing machine",machine_data)
-    #     job_end_times = [0] * num_jobs
-        
-    #     # Ensure that chromosome has the correct dimensions
-    #     if len(chromosome) != num_jobs:
-    #         raise ValueError("Chromosome length does not match the number of jobs")
-        
-    #     for i in range(num_jobs):
-    #         # Ensure that each job in the chromosome has the correct number of machines
-    #         if len(chromosome[i]) != num_machines:
-    #             raise ValueError(f"Chromosome does not have the expected number of machines for job {i}")
-            
-    #         for j in range(num_machines):
-    #             # Ensure that each machine for a job has the expected structure
-    #             if len(chromosome[i][j]) != 2:
-    #                 raise ValueError(f"Invalid machine structure in chromosome for job {i}, machine {j}")
-                
-    #             # Calculate start time for each job on each machine
-    #             if i == 0 and j == 0:
-    #                 start_time = 0
-    #             elif j == 0:
-    #                 start_time = job_end_times[i - 1]
-    #             elif i == 0:
-    #                 start_time = job_end_times[i]
-    #             else:
-    #                 start_time = max(job_end_times[i - 1], job_end_times[i])
-                
-    #             # Calculate end time for each job on each machine
-    #             end_time = start_time + chromosome[i][j][1]
-    #             job_end_times[i] = end_time
-        
-    #     return max(job_end_times)
-
-    # def calculate_fitness(self, chromosome):
-
-    #     num_jobs, num_machines, job_data = self.read_file()
-    #     print("printing data", chromosome)
-    #     machine_data = dict()
-    #     for i in range(len(chromosome[0])):
-    #         for idx,j in enumerate(chromosome):
-    #             if j[i][0] in machine_data:
-    #                 machine_data[j[i][0]].append((idx,j[i][1]))
-    #             else:
-    #                 machine_data[j[i][0]] = [(idx,j[i][1])]
-
-    #     print("printing machine",machine_data)
-    #     job_end_times = [0] * num_jobs
-    #     for job in chromosome:
-            
-
-    def make_unique(self, chromosome):
-        # Ensure uniqueness of jobs in the chromosome
-        seen = set()
-        unique_chromosome = []
+    def calculate_fitness(self, chromosome):
+        # Calculate the makespan for a given chromosome
+        # print("Calculating fitness for chromosome:", chromosome)
+        occurences = dict()
+        end_times = dict()
+        end_times_machine = dict()
         for job in chromosome:
-            job_tuple = tuple(job)  # Convert the list to a tuple
-            if job_tuple not in seen:
-                unique_chromosome.append(job)
-                seen.add(job_tuple)
-        return unique_chromosome
+            # print("ending_times",end_times)
+            if job in occurences:
+                occurences[job] += 1
+            else:
+                occurences[job] = 0
+            occurence = occurences[job]
+            machine = self.job_machine[job][occurence]
+            time = self.job_time[job][occurence]
+
+            if occurence == 0:
+                start_time = 0
+            else:
+                start_time = end_times[job][occurence-1]
+
+            if machine in end_times_machine:
+                start_time = max(start_time, end_times_machine[machine])
+            else:
+                start_time = start_time
+
+            end_time = start_time + time
+            if job in end_times:
+                end_times[job].append(end_time)
+            else:
+                end_times[job] = [end_time]
+
+            if machine in end_times_machine:
+                end_times_machine[machine] = max(end_times_machine[machine], end_time)
+            else:
+                end_times_machine[machine] = end_time
+
+        makespan = max(end_times_machine.values())
+        
+        return makespan
     
     def crossover(self, parent1, parent2):
-        # Perform crossover to create a new chromosome from two parents
-        num_jobs = len(parent1[0])
-        crossover_point = np.random.randint(1, num_jobs)
+        crossover_point = np.random.randint(1,len(parent1[0])-1)
 
-        # Create a new chromosome by combining parts of both parents
-        new_chromosome1 = parent1[0][:crossover_point] + parent2[0][crossover_point:]
-        new_chromosome2 = parent2[0][:crossover_point] + parent1[0][crossover_point:]
-
-        # Ensure uniqueness of jobs in each chromosome
-        new_chromosome1 = self.make_unique(new_chromosome1)
-        new_chromosome2 = self.make_unique(new_chromosome2)
+        first_half = parent1[0][:crossover_point] 
+        second_half = parent2[0][crossover_point:]
         
-        # Check the shape of the new chromosomes
-        print("Shape of new chromosome 1:", len(new_chromosome1))
-        print("Shape of new chromosome 2:", len(new_chromosome2))
+        offspring1 = self.make_unique(first_half, second_half)
 
-        fitness1 = self.calculate_fitness(new_chromosome1)
-        fitness2 = self.calculate_fitness(new_chromosome2)
-        offsprings = [(new_chromosome1, fitness1), (new_chromosome2, fitness2)]
-        # print(offsprings[0][0])
+        first_half = parent2[0][:crossover_point]
+        second_half = parent1[0][crossover_point:]
+
+        offspring2 = self.make_unique(first_half, second_half)
+
+        fitness1 = self.calculate_fitness(offspring1)
+        fitness2 = self.calculate_fitness(offspring2)
+
+        offsprings = [(offspring1,fitness1),(offspring2,fitness2)]
         return offsprings
 
+    def make_unique(self, first_half, second_half):
+        occurences = dict()
+        offspring  = first_half.copy()
+        for i in first_half:
+            if i in occurences:
+                occurences[i] += 1
+            else:
+                occurences[i] = 1
+        
+        for i in second_half:
+            if i in occurences:
+                if occurences[i]<self.num_operations:
+                    occurences[i] += 1
+                    offspring.append(i)
+            else:
+                occurences[i] = 1
+                offspring.append(i)
+
+        for i in occurences:
+            if occurences[i]<self.num_operations:
+                for j in range(self.num_operations-occurences[i]):
+                    offspring.append(i)
+
+        return offspring
+        
     def mutate(self, chromosome):
         # Perform mutation by swapping two jobs in the chromosome based on mutation rate
         jobs = chromosome[0].copy()  # Extract the jobs from the chromosome tuple
-        num_jobs = len(jobs)
+        fitness = chromosome[1]
 
         if np.random.random() < self.mutation_rate:
-            # Randomly select two different jobs to swap
-            job_index1, job_index2 = np.random.choice(num_jobs, 2, replace=False)
-            # Swap the jobs
-            jobs[job_index1], jobs[job_index2] = jobs[job_index2], jobs[job_index1]
+            swaps = 1
+            for i in range(swaps):
+                idx = np.random.randint(0, len(jobs), 2)
+                while idx[0] == idx[1]:
+                    idx = np.random.randint(0, len(jobs), 2)
+                
+                while jobs[idx[1]]==jobs[idx[0]]:
+                    idx[1]+=1
+                    idx[1]=idx[1]%len(jobs)
 
-        # Ensure uniqueness of jobs in the chromosome
-        jobs = self.make_unique(jobs)
-
-        # Recalculate fitness for the mutated chromosome
-        fitness = self.calculate_fitness(jobs)
-
-        # Return the mutated chromosome as a tuple containing the jobs and their fitness
+                jobs[idx[0]], jobs[idx[1]] = jobs[idx[1]], jobs[idx[0]]
+            fitness = self.calculate_fitness(jobs)
+        
         return (jobs, fitness)
+            
 
     def random_chromosome(self):
-        jobs = []
-        # print("printing data", self.data[2])
-        for job_data in self.data[2]:
-            job = []
-            machines_and_times = list(zip(job_data[::2], job_data[1::2]))  # Create pairs of machine and time
-            random.shuffle(machines_and_times)  # Shuffle pairs of machine and time
-            for machine, processing_time in machines_and_times:
-                job.append((machine, processing_time))
-            jobs.append(job)
-
-        fitness = self.calculate_fitness(jobs)
-
-        chromosome = (jobs, fitness)
-        # print(chromosome[0])
-        return chromosome
+        chromosome = []
+        for i in range(self.num_jobs):
+            for j in range(self.num_operations):
+                chromosome.append(i)
+        random.shuffle(chromosome)
+        fitness = self.calculate_fitness(chromosome)
+        return (chromosome, fitness)
 
     def read_file(self):
         with open(self.filename, 'r') as file:
             lines = file.readlines()
-            num_jobs, num_machines = map(int, lines[0].split())
+            self.num_jobs, self.num_machines = map(int, lines[0].split())
             data = lines[1:]
             data = [x.strip() for x in data]
             data = [x.split() for x in data]
             job_data = [[int(y) for y in x] for x in data]
+            self.job_machine = dict()
+            self.job_time = dict()
+            for idx,i in enumerate(job_data):
+                self.job_machine[idx] = [i[j] for j in range(0,len(i),2)]
+                self.job_time[idx] = [i[j] for j in range(1,len(i),2)]
+            self.num_operations = int(len(job_data[0])/2)
 
-        return num_jobs, num_machines, job_data
+        return job_data

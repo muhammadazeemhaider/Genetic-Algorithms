@@ -45,14 +45,17 @@ class TSP(Problem):
     def mutate(self, chromosome):
         # Perform mutation by swapping two cities in the chromosome based on mutation rate
         new_chromosome = chromosome[0].copy() 
+        fitness = chromosome[1]
 
         r = np.random.random() < self.mutation_rate
         if r < self.mutation_rate:
-            mutation_point = np.random.randint(0, len(new_chromosome))
-            new_chromosome = new_chromosome[mutation_point:] + [x for x in new_chromosome[:mutation_point] if x not in new_chromosome[mutation_point:]]
-        self.insert_missing(chromosome,new_chromosome)
+            mutation_point = np.random.randint(0, len(new_chromosome),2)
+            new_chromosome[mutation_point[0]], new_chromosome[mutation_point[1]] = new_chromosome[mutation_point[1]], new_chromosome[mutation_point[0]]
+            # new_chromosome = new_chromosome[mutation_point:] + [x for x in new_chromosome[:mutation_point] if x not in new_chromosome[mutation_point:]]
+            # self.insert_missing(chromosome,new_chromosome)
 
-        fitness = self.calculate_fitness(new_chromosome)
+            fitness = self.calculate_fitness(new_chromosome)
+
         new_chromosome = (new_chromosome,fitness)
         return new_chromosome
 
@@ -119,5 +122,3 @@ class ReadFile:
         city = city_data.split()
         city = (float(city[1]),float(city[2]))
         return city
-
-
