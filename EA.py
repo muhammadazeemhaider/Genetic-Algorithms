@@ -44,12 +44,11 @@ class EA:
                     self.instance.population.append(offsprings[1])
                 survivors = survivor_selection_function(s=True)
                 self.instance.population = survivors
-                top_solution_generation = min(self.instance.population, key=lambda x: x[1])[1]
+                top_solution_generation = min(self.instance.population, key=lambda x: x[1])
                 print("Generation: ", j + 1)
-                print("Top solution for this iteration: ", top_solution_generation)
-                top_solution_iteration = min(top_solution_iteration, top_solution_generation)
-            top_solutions.append(top_solution_iteration)
-            self.instance.init_population()
+                print("Top solution for this iteration: ", top_solution_generation[1])  # Print the fitness value
+                top_solution_iteration = min(top_solution_iteration, top_solution_generation[1])  # Store fitness value only
+            top_solutions.append((None, top_solution_iteration))  # Append the fitness value only
 
         # Plot the bar graph
         x = list(range(1, self.iterations + 1))  # x-axis values
