@@ -51,18 +51,18 @@ class EA:
             # self.instance.init_population()
         
         # Plot the bar graph
-        x = list(range(1, self.iterations + 1))  # x-axis values
-        y = [solution[1] for solution in top_solutions]  # y-axis values
-        plt.bar(x, y, color='skyblue')
-        plt.xlabel('Iterations')
-        plt.ylabel('Fitness Value', labelpad=0.001)  # Adjust labelpad here
-        plt.title('Best Fitness Value over Iterations')
+        # x = list(range(1, self.iterations + 1))  # x-axis values
+        # y = [solution[1] for solution in top_solutions]  # y-axis values
+        # plt.bar(x, y, color='skyblue')
+        # plt.xlabel('Iterations')
+        # plt.ylabel('Fitness Value', labelpad=0.001)  # Adjust labelpad here
+        # plt.title('Best Fitness Value over Iterations')
 
-        # Add legend with selection scheme names
-        plt.legend([f'{self.parent_selection_scheme} + {self.survivor_selection_scheme}'], loc='upper right')
+        # # Add legend with selection scheme names
+        # plt.legend([f'{self.parent_selection_scheme} + {self.survivor_selection_scheme}'], loc='upper right')
 
-        # Add grid for better visualization
-        plt.grid(True)
+        # # Add grid for better visualization
+        # plt.grid(True)
 
-        # Show plot
-        plt.show()
+        # # Show plot
+        # plt.show()
