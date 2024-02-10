@@ -43,9 +43,9 @@ class EA:
                     self.instance.population.append(offsprings[1])
                 survivors = survivor_selection_function(s=True)
                 self.instance.population = survivors
-                print("Generation: ", j+1)
+                # print("Generation: ", j+1)
                 top_solution = min(self.instance.population, key=lambda x: x[1])
-                print("Top solution for this generation: ", top_solution[1])
+                print("Top solution for this generation no:",j+1, top_solution[1])
                 # self.instance.plot_polygons(top_solution[0])
             top_solutions.append(min(self.instance.population, key=lambda x: x[1]))
             # self.instance.init_population()

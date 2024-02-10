@@ -6,7 +6,7 @@ class JSSP(Problem):
 
     def calculate_fitness(self, chromosome):
         # Calculate the makespan for a given chromosome
-        print("Calculating fitness for chromosome:", chromosome)
+        # print("Calculating fitness for chromosome:", chromosome)
         occurences = dict()
         end_times = dict()
         end_times_machine = dict()
@@ -45,51 +45,69 @@ class JSSP(Problem):
         
         return makespan
     
-
-
-    
     def crossover(self, parent1, parent2):
-        # Perform crossover to create a new chromosome from two parents
-        num_jobs = len(parent1[0])
-        crossover_point = np.random.randint(1, num_jobs)
+        crossover_point = np.random.randint(1,len(parent1[0])-1)
 
-        # Create a new chromosome by combining parts of both parents
-        new_chromosome1 = parent1[0][:crossover_point] + parent2[0][crossover_point:]
-        new_chromosome2 = parent2[0][:crossover_point] + parent1[0][crossover_point:]
-
-        # Ensure uniqueness of jobs in each chromosome
-        new_chromosome1 = self.make_unique(new_chromosome1)
-        new_chromosome2 = self.make_unique(new_chromosome2)
+        first_half = parent1[0][:crossover_point] 
+        second_half = parent2[0][crossover_point:]
         
-        # Check the shape of the new chromosomes
-        print("Shape of new chromosome 1:", len(new_chromosome1))
-        print("Shape of new chromosome 2:", len(new_chromosome2))
+        offspring1 = self.make_unique(first_half, second_half)
 
-        fitness1 = self.calculate_fitness(new_chromosome1)
-        fitness2 = self.calculate_fitness(new_chromosome2)
-        offsprings = [(new_chromosome1, fitness1), (new_chromosome2, fitness2)]
-        # print(offsprings[0][0])
+        first_half = parent2[0][:crossover_point]
+        second_half = parent1[0][crossover_point:]
+
+        offspring2 = self.make_unique(first_half, second_half)
+
+        fitness1 = self.calculate_fitness(offspring1)
+        fitness2 = self.calculate_fitness(offspring2)
+
+        offsprings = [(offspring1,fitness1),(offspring2,fitness2)]
         return offsprings
 
+    def make_unique(self, first_half, second_half):
+        occurences = dict()
+        offspring  = first_half.copy()
+        for i in first_half:
+            if i in occurences:
+                occurences[i] += 1
+            else:
+                occurences[i] = 1
+        
+        for i in second_half:
+            if i in occurences:
+                if occurences[i]<self.num_operations:
+                    occurences[i] += 1
+                    offspring.append(i)
+            else:
+                occurences[i] = 1
+                offspring.append(i)
+
+        for i in occurences:
+            if occurences[i]<self.num_operations:
+                for j in range(self.num_operations-occurences[i]):
+                    offspring.append(i)
+
+        return offspring
+        
     def mutate(self, chromosome):
         # Perform mutation by swapping two jobs in the chromosome based on mutation rate
         jobs = chromosome[0].copy()  # Extract the jobs from the chromosome tuple
-        num_jobs = len(jobs)
+        fitness = chromosome[1]
 
         if np.random.random() < self.mutation_rate:
-            # Randomly select two different jobs to swap
-            job_index1, job_index2 = np.random.choice(num_jobs, 2, replace=False)
-            # Swap the jobs
-            jobs[job_index1], jobs[job_index2] = jobs[job_index2], jobs[job_index1]
+            idx = np.random.randint(0, len(jobs), 2)
+            while idx[0] == idx[1]:
+                idx = np.random.randint(0, len(jobs), 2)
+            
+            while jobs[idx[1]]==jobs[idx[0]]:
+                idx[1]+=1
+                idx[1]=idx[1]%len(jobs)
 
-        # Ensure uniqueness of jobs in the chromosome
-        jobs = self.make_unique(jobs)
-
-        # Recalculate fitness for the mutated chromosome
-        fitness = self.calculate_fitness(jobs)
-
-        # Return the mutated chromosome as a tuple containing the jobs and their fitness
+            jobs[idx[0]], jobs[idx[1]] = jobs[idx[1]], jobs[idx[0]]
+            fitness = self.calculate_fitness(jobs)
+        
         return (jobs, fitness)
+            
 
     def random_chromosome(self):
         chromosome = []
