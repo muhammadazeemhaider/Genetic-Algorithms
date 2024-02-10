@@ -17,6 +17,7 @@ class Problem():
         self.population = []  # Add this line to initialize the population attribute
         # Initialize the population with random individuals
         for _ in range(self.population_size):
+            # print("calling random_chromosome")
             self.population.append(self.random_chromosome()) 
         # print(self.population[0])
         # print(self.population[1])

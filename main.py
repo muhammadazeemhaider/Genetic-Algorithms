@@ -6,8 +6,8 @@ def main_test():
     filename = "mona_lisa.jpg"
     parent_selection = "truncation"
     survivor_selection = "truncation"
-    pop_size = 1
-    offspring_size = 1
+    pop_size = 2
+    offspring_size = 0
     generations_no = 1
     mutation_rate = 0.5
     iterations = 1

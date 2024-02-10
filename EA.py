@@ -44,9 +44,11 @@ class EA:
                 survivors = survivor_selection_function(s=True)
                 self.instance.population = survivors
                 print("Generation: ", j+1)
-                print("Top solution for this iteration: ", min(self.instance.population, key=lambda x: x[1])[1])
+                top_solution = min(self.instance.population, key=lambda x: x[1])
+                print("Top solution for this generation: ", top_solution[1])
+                # self.instance.plot_polygons(top_solution[0])
             top_solutions.append(min(self.instance.population, key=lambda x: x[1]))
-            self.instance.init_population()
+            # self.instance.init_population()
         
         # Plot the bar graph
         x = list(range(1, self.iterations + 1))  # x-axis values
@@ -55,4 +57,4 @@ class EA:
         plt.xlabel('Iterations')
         plt.ylabel('Fitness Value')
         plt.title('Best Fitness value over Iterations')
-        plt.show()
+        # plt.show()
