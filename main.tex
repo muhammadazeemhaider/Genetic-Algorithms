@@ -18,7 +18,7 @@
 
 \pagestyle{fancy}
 \fancyhf{} % Clear all header and footer fields
-\fancyhead[R]{Optimizing Cleaning Paths for Robots in Domestic Settings} % Add this line to set the header on the right side
+\fancyhead[R]{Evolutionary Algorithms} % Add this line to set the header on the right side
 \renewcommand{\headrulewidth}{0pt} % Remove the horizontal line in the header
 
 % Define section numbering format
@@ -38,7 +38,7 @@
     {\large Mustafa Sohail $\mid$ ms06860@st.habib.edu.pk\par}
     {\large Muhammad Azeem Haider $\mid$ mh06858@st.habib.edu.pk\par}
     \vspace{2cm}
-    \includegraphics[height=7cm]{HU_logo}\\\bigskip
+    \includegraphics[height=7cm]{images/HU_logo}\\\bigskip
     {\large \today}\\\bigskip\bigskip
     \vspace{1cm}
     \vspace{2cm}
@@ -53,5 +53,62 @@
 \thispagestyle{empty} % No page number on index page
 \tableofcontents
 \clearpage
+
+\section{Introduction}
+The first assignment of the course Computational Intelligence (CS-451) required us to implement evolutionary algorithms for three problems which are as followed:
+
+\begin{enumerate}
+    \item \textbf{Travelling Salesman Problem:} The Travelling Salesman Problem (TSP) is a classic problem in combinatorial optimization. It is the problem of finding a tour of a set of n cities that is of minimum cost. A tour is a permutation of the cities, and the cost of a tour is the sum of the distances between adjacent cities in the tour.
+    \item \textbf{Job-Shop Scheduling Problem:} The job-shop scheduling problem is a classic problem in combinatorial optimization. It is the problem of scheduling a set of n jobs on a set of m machines. Each job consists of a sequence of operations, each of which must be processed on a specific machine for a specific amount of time.
+    \item \textbf{Evolutionary Art (Mona Lisa):} The evolutionary art problem is a classic problem in evolutionary computation. It is the problem of evolving a population of images to match a target image. Each image in the population is represented as a string of genes, and the fitness of an image is the similarity between the image and the target image.
+\end{enumerate}
+
+\section{Travelling Salesman Problem}
+
+The travelling salesman problem requires finding of the minimum cost (distance) to cover all the cities. The \textbf{chromosome generation} is being carried out by randomly shuffling the cities of the Qatar dataset. 
+\newline \\
+Furthermore, the \textbf{mutate function} assigns each chromosome a random number from 0 to 1, and if the number is less than the mutation rate, mutation occurs. 
+\newline \\
+Finally, the \textbf{crossover function} once again, carries out crossover between two parents by assigning the crossover point, and all the repeated cities from the second parent, that are already added in the first part, are added linearly in the end. 
+
+\subsection{Analysis}
+
+While carrying out initial combination for selection schemes for parent selection and survival selection, it was clear that a combination of an explorative scheme as a parent selection and an exploitative scheme as a survival selection would be the best. As a result, two main combinations that were tested were the following:
+
+    \begin{enumerate}
+        \item \textbf{Parent Selection:} Random \textbf{Survival Selection:} truncation
+        \item \textbf{Parent Selection:} tournament selection \textbf{Survival Selection:} truncation
+    \end{enumerate}
+
+We yeilded the following result for the first combination, where we had two extremes as the parent selection and survival selection schemes:
+
+% \begin{center}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/figure_1.png}
+    \caption{Travelling Salesman Problem: Combination 1}
+\end{figure}
+% \end{center}
+
+The result reported in \textit{Figure 1}, was obtained by the following parameters:
+
+\begin{enumerate}
+    \item \textbf{Population Size:} 1000
+    \item \textbf{Offspring Size:} 200
+    \item \textbf{Number of Generations:} 5000
+    \item \textbf{Mutation Rate:} 0.45
+    \item \textbf{Iterations:} 10
+\end{enumerate}
+
+
+% The two combinations were ran on the following parameters:
+
+%     \begin{enumerate}
+%         \item \textbf{Population Size:} 1000
+%         \item \textbf{Offspring Size:} 200
+%         \item \textbf{Number of Generations:} 5000
+%         \item \textbf{Mutation Rate:} 0.45
+%         \item \textbf{Iterations:} 10
+%     \end{enumerate}
 
 \end{document}

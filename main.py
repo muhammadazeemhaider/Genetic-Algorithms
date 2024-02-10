@@ -2,6 +2,7 @@ import sys
 from EA import EA
 
 def main_test():
+<<<<<<< HEAD
     problem = "MonaLisa"
     filename = "mona_lisa.jpg"
     parent_selection = "truncation"
@@ -9,8 +10,17 @@ def main_test():
     pop_size = 2
     offspring_size = 0
     generations_no = 1
+=======
+    problem = "TSP"
+    filename = "qa194.tsp"
+    parent_selection = "tournament_selection_2"
+    survivor_selection = "fitness_prop_selection"
+    pop_size = 30
+    offspring_size = 10
+    generations_no = 50
+>>>>>>> d8dcdb4221777f8061ea8b81b73b7501fe809afd
     mutation_rate = 0.5
-    iterations = 1
+    iterations = 10
     EA(pop_size, offspring_size, generations_no, mutation_rate, iterations, problem, parent_selection, survivor_selection, filename).run()
 
 
