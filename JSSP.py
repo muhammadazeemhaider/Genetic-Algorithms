@@ -95,15 +95,17 @@ class JSSP(Problem):
         fitness = chromosome[1]
 
         if np.random.random() < self.mutation_rate:
-            idx = np.random.randint(0, len(jobs), 2)
-            while idx[0] == idx[1]:
+            swaps = 1
+            for i in range(swaps):
                 idx = np.random.randint(0, len(jobs), 2)
-            
-            while jobs[idx[1]]==jobs[idx[0]]:
-                idx[1]+=1
-                idx[1]=idx[1]%len(jobs)
+                while idx[0] == idx[1]:
+                    idx = np.random.randint(0, len(jobs), 2)
+                
+                while jobs[idx[1]]==jobs[idx[0]]:
+                    idx[1]+=1
+                    idx[1]=idx[1]%len(jobs)
 
-            jobs[idx[0]], jobs[idx[1]] = jobs[idx[1]], jobs[idx[0]]
+                jobs[idx[0]], jobs[idx[1]] = jobs[idx[1]], jobs[idx[0]]
             fitness = self.calculate_fitness(jobs)
         
         return (jobs, fitness)
