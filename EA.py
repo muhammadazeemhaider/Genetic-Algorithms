@@ -50,6 +50,9 @@ class EA:
                 top_solution_iteration = min(top_solution_iteration, top_solution_generation[1])  # Store fitness value only
             top_solutions.append((None, top_solution_iteration))  # Append the fitness value only
 
+        self.plot_graph(top_solutions)
+
+    def plot_graph(self, top_solutions):
         # Plot the bar graph
         x = list(range(1, self.iterations + 1))  # x-axis values
         y = [solution[1] for solution in top_solutions]  # y-axis values
