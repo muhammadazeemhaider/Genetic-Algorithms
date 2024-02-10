@@ -1,6 +1,6 @@
 from JSSP import JSSP
 from TSP import TSP
-from MonaLisa import MonaLisa
+# from MonaLisa import MonaLisa
 import matplotlib.pyplot as plt
 
 class EA: 
