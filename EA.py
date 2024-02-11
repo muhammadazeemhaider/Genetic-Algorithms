@@ -34,17 +34,13 @@ class EA:
 
 
         for i in range(self.instance.iterations):
-<<<<<<< HEAD
-            swaps = 1
-=======
             top_solution_iteration = float('inf')  # Initialize top solution for current iteration
->>>>>>> bff4cb83760599ca80e0b4c099b5faf2d549699f
             for j in range(self.instance.generations):
                 for k in range(0, self.instance.offspring_size, 2):
                     parents = parent_selection_function(p=True)
                     offsprings = self.instance.crossover(parents[0], parents[1])
-                    self.instance.population.append(self.instance.mutate(offsprings[0],swaps))
-                    self.instance.population.append(self.instance.mutate(offsprings[1],swaps))
+                    self.instance.population.append(self.instance.mutate(offsprings[0]))
+                    self.instance.population.append(self.instance.mutate(offsprings[1]))
                     self.instance.population.append(offsprings[0])
                     self.instance.population.append(offsprings[1])
                 survivors = survivor_selection_function(s=True)

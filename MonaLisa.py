@@ -1,5 +1,5 @@
 import random
-from PIL import Image
+from PIL import Image, ImageDraw
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.patches import Polygon
@@ -7,7 +7,6 @@ from problem import Problem
 
 class MonaLisa(Problem):
 
-<<<<<<< HEAD
     def __init__(self, population_size, offspring_size, generations, mutation_rate, iterations, filename):
         self.original_image = Image.open(filename)
         super().__init__(population_size, offspring_size, generations, mutation_rate, iterations, filename)
@@ -34,39 +33,6 @@ class MonaLisa(Problem):
         fitness = np.sum((original_array - img_array) ** 2)
         return fitness
 
-        
-=======
-    def calculate_fitness(self, chromosome):
-        # Calculate the fitness of a chromosome
-        # Load the original Mona Lisa image
-        original_image = Image.open('mona_lisa.jpg')
-        original_pixels = np.array(original_image)
-
-        test_image = Image.open('mona_lisa_test.jpg')
-        test_image = test_image.resize(original_image.size)  # Resize test_image to match original_image dimensions
-        test_pixels = np.array(test_image)
-
-        # Create a blank canvas to draw the polygons on
-        canvas_size = (original_image.width, original_image.height)
-        canvas = Image.new('RGB', canvas_size)
-        canvas_pixels = np.array(canvas)
-
-        # Draw the polygons on the canvas
-        print(chromosome)
-        for polygon in chromosome:
-            x = polygon['x']
-            y = polygon['y']
-            color = polygon['color']
-
-            poly = np.column_stack([x, y])
-            canvas_pixels = cv2.fillPoly(canvas_pixels, [poly], (0,0,255))
-
-        # Calculate the fitness as the mean squared error between the original and generated image
-        fitness = np.mean((original_pixels - test_pixels) ** 2)
-
-        return fitness
-    
->>>>>>> bff4cb83760599ca80e0b4c099b5faf2d549699f
     def crossover(self, parent1, parent2):
         # Perform crossover to create a new chromosome from two parents
         crossover_point = random.randint(1, len(parent1))
@@ -82,11 +48,6 @@ class MonaLisa(Problem):
         return offsprings
 
     def random_chromosome(self):
-<<<<<<< HEAD
-        # print("generating random chromosome")
-=======
->>>>>>> bff4cb83760599ca80e0b4c099b5faf2d549699f
-        # Generate a random chromosome for the Mona Lisa problem
         num_polygons = 5
         canvas_size = (100, 100)
         polygons = []
@@ -110,22 +71,9 @@ class MonaLisa(Problem):
             y = polygon['y']
             color = polygon['color']
 
-<<<<<<< HEAD
-    def plot_polygons(self, polygons):
-        # print(polygons)
-=======
-            poly = np.column_stack([x, y])
-            canvas_pixels = cv2.fillPoly(canvas_pixels, [poly], color)
-
-        # Display the image
-        plt.imshow(canvas_pixels)
-        plt.axis('off')
-        plt.show()
-
 
     def plot_polygons(self, polygons, canvas_size=(100, 100)):
         print(polygons)
->>>>>>> bff4cb83760599ca80e0b4c099b5faf2d549699f
         fig, ax = plt.subplots(facecolor='black')  # Set the facecolor of the figure to black
         ax.set_xlim(0, canvas_size[0])
         ax.set_ylim(0, canvas_size[1])
@@ -142,14 +90,11 @@ class MonaLisa(Problem):
         ax.axis('off')  # Turn off the axis
         ax.grid(False)  # Turn off the grid lines
 
-<<<<<<< HEAD
         save_path = "/"
 
         if save_path:
             plt.savefig(save_path, bbox_inches='tight', pad_inches=0, facecolor=fig.get_facecolor(), transparent=True)
 
-        plt.show()
-=======
         plt.show()
 
 def plot_polygons(polygons, canvas_size=(100, 100)):
@@ -175,4 +120,3 @@ def plot_polygons(polygons, canvas_size=(100, 100)):
 polygon = [{'x': [1, 26, 4], 'y': [24, 53, 87], 'color': 'blue'}, {'x': [38, 28, 11], 'y': [16, 37, 63], 'color': 'blue'}, {'x': [70, 21, 29], 'y': [37, 28, 77], 'color': 'blue'}, {'x': [78, 83, 53], 'y': [77, 13, 10], 'color': 'blue'}, {'x': [41, 90, 4], 'y': [99, 15, 98], 'color': 'blue'}]
 # plot_polygons(polygon)
 
->>>>>>> bff4cb83760599ca80e0b4c099b5faf2d549699f
