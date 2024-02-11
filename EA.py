@@ -49,20 +49,27 @@ class EA:
                 print("Top solution for this iteration: ", top_solution_generation[1])  # Print the fitness value
                 top_solution_iteration = min(top_solution_iteration, top_solution_generation[1])  # Store fitness value only
             top_solutions.append((None, top_solution_iteration))  # Append the fitness value only
+            self.instance.init_population()  # Reinitialize the population for the next iteration
 
         self.plot_graph(top_solutions)
 
     def plot_graph(self, top_solutions):
+
         # Plot the bar graph
         x = list(range(1, self.iterations + 1))  # x-axis values
         y = [solution[1] for solution in top_solutions]  # y-axis values
         plt.bar(x, y, color='skyblue')
+        
+        # Add labels on top of bars
+        for i, v in enumerate(y):
+            plt.text(x[i], v, str(v), ha='center', va='bottom')
+
         plt.xlabel('Iterations')
         plt.ylabel('Fitness Value', labelpad=0.001)  # Adjust labelpad here
         plt.title('Best Fitness Value over Iterations')
 
-        # Add legend with selection scheme names
-        plt.legend([f'{self.parent_selection_scheme} + {self.survivor_selection_scheme}'], loc='upper right')
+        # Add legend with selection scheme names and adjust its position
+        # plt.legend([f'{self.parent_selection_scheme} + {self.survivor_selection_scheme}'], loc='lower right', bbox_to_anchor=(1.25, 1))
 
         # Add grid for better visualization
         plt.grid(True)
