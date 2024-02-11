@@ -34,7 +34,11 @@ class EA:
 
 
         for i in range(self.instance.iterations):
+<<<<<<< HEAD
             swaps = 1
+=======
+            top_solution_iteration = float('inf')  # Initialize top solution for current iteration
+>>>>>>> bff4cb83760599ca80e0b4c099b5faf2d549699f
             for j in range(self.instance.generations):
                 for k in range(0, self.instance.offspring_size, 2):
                     parents = parent_selection_function(p=True)
@@ -45,26 +49,35 @@ class EA:
                     self.instance.population.append(offsprings[1])
                 survivors = survivor_selection_function(s=True)
                 self.instance.population = survivors
-                # print("Generation: ", j+1)
-                top_solution = min(self.instance.population, key=lambda x: x[1])
-                print("Top solution for this generation no:",j+1, top_solution[1])
-                # self.instance.plot_polygons(top_solution[0])
-            top_solutions.append(min(self.instance.population, key=lambda x: x[1]))
-            # self.instance.init_population()
-        
+                top_solution_generation = min(self.instance.population, key=lambda x: x[1])
+                print("Generation: ", j + 1)
+                print("Top solution for this iteration: ", top_solution_generation[1])  # Print the fitness value
+                top_solution_iteration = min(top_solution_iteration, top_solution_generation[1])  # Store fitness value only
+            top_solutions.append((None, top_solution_iteration))  # Append the fitness value only
+            self.instance.init_population()  # Reinitialize the population for the next iteration
+
+        self.plot_graph(top_solutions)
+
+    def plot_graph(self, top_solutions):
+
         # Plot the bar graph
-        # x = list(range(1, self.iterations + 1))  # x-axis values
-        # y = [solution[1] for solution in top_solutions]  # y-axis values
-        # plt.bar(x, y, color='skyblue')
-        # plt.xlabel('Iterations')
-        # plt.ylabel('Fitness Value', labelpad=0.001)  # Adjust labelpad here
-        # plt.title('Best Fitness Value over Iterations')
+        x = list(range(1, self.iterations + 1))  # x-axis values
+        y = [solution[1] for solution in top_solutions]  # y-axis values
+        plt.bar(x, y, color='skyblue')
+        
+        # Add labels on top of bars
+        for i, v in enumerate(y):
+            plt.text(x[i], v, str(v), ha='center', va='bottom')
 
-        # # Add legend with selection scheme names
-        # plt.legend([f'{self.parent_selection_scheme} + {self.survivor_selection_scheme}'], loc='upper right')
+        plt.xlabel('Iterations')
+        plt.ylabel('Fitness Value', labelpad=0.001)  # Adjust labelpad here
+        plt.title('Best Fitness Value over Iterations')
 
-        # # Add grid for better visualization
-        # plt.grid(True)
+        # Add legend with selection scheme names and adjust its position
+        # plt.legend([f'{self.parent_selection_scheme} + {self.survivor_selection_scheme}'], loc='lower right', bbox_to_anchor=(1.25, 1))
 
-        # # Show plot
-        # plt.show()
+        # Add grid for better visualization
+        plt.grid(True)
+
+        # Show plot
+        plt.show()

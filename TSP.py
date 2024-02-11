@@ -122,5 +122,3 @@ class ReadFile:
         city = city_data.split()
         city = (float(city[1]),float(city[2]))
         return city
-
-
