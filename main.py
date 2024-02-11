@@ -2,13 +2,13 @@ import sys
 from EA import EA
 
 def main_test():
-    problem = "MonaLisa"
-    filename = "mona_lisa.jpg"
-    parent_selection = "random"
-    survivor_selection = "truncation"
-    pop_size = 1
-    offspring_size = 0
-    generations_no = 1
+    problem = "JSSP"
+    filename = "abz5"
+    parent_selection = "tournament_selection_2"
+    survivor_selection = "fitness_prop_selection"
+    pop_size = 30
+    offspring_size = 10
+    generations_no = 50
     mutation_rate = 0.5
     iterations = 10
     EA(pop_size, offspring_size, generations_no, mutation_rate, iterations, problem, parent_selection, survivor_selection, filename).run()
