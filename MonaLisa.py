@@ -4,46 +4,36 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.patches import Polygon
 from problem import Problem
-import cv2
 
 class MonaLisa(Problem):
 
     def __init__(self, population_size, offspring_size, generations, mutation_rate, iterations, filename):
         self.original_image = Image.open(filename)
         super().__init__(population_size, offspring_size, generations, mutation_rate, iterations, filename)
-        
-    def calculate_fitness(self, chromosome):
-        original_pixels = np.array(self.original_image)
 
-        test_image = Image.new('RGB', self.original_image.size)
-        draw = ImageDraw.Draw(test_image)
-        # plt.imshow(draw)
-        for polygon in chromosome:
+    def calculate_fitness(self, polygons):
+        # Calculate the fitness of a chromosome for the Mona Lisa problem
+        # Create a blank image with the same size as the original image
+        self.canvas_size = self.original_image.size
+        img = Image.new('RGB', self.canvas_size, color='black')
+        draw = ImageDraw.Draw(img, 'RGBA')
+
+        # Draw the polygons on the blank image
+        for polygon in polygons:
             x = polygon['x']
             y = polygon['y']
-            color =  tuple(int(c * 255) for c in polygon['color'])
+            color = tuple(int(255 * c) for c in polygon['color'])
+            draw.polygon(list(zip(x, y)), fill=color)
 
-            poly = [(x[i], y[i]) for i in range(len(x))]
-            draw.polygon(poly, fill=color)
+        # Convert the images to numpy arrays
+        original_array = np.array(self.original_image)
+        img_array = np.array(img)
 
-        plt.imshow(test_image)
-        test_pixels = np.array(test_image)
+        # Calculate the fitness as the difference between the original and generated images
+        fitness = np.sum((original_array - img_array) ** 2)
+        return fitness
 
-        # Ensure the dimensions match and convert to same datatype for error calculation
-        original_pixels = original_pixels.astype(np.float32)
-        test_pixels = test_pixels.astype(np.float32)
-        print("printing from fitness function")
-        plt.imshow(test_pixels)
-        print("plotting done")
-        # Normalize pixel values
-        original_pixels /= 255.0
-        test_pixels /= 255.0
-
-        # Calculate Mean Squared Error
-        mse = np.mean((original_pixels - test_pixels) ** 2)
-        print(mse)
-        return mse
-    
+        
     def crossover(self, parent1, parent2):
         # Perform crossover to create a new chromosome from two parents
         crossover_point = random.randint(1, len(parent1))
@@ -77,7 +67,7 @@ class MonaLisa(Problem):
             return chromosome
 
     def random_chromosome(self):
-        print("generating random chromosome")
+        # print("generating random chromosome")
         # Generate a random chromosome for the Mona Lisa problem
         num_polygons = 5
         polygons = []
@@ -98,7 +88,7 @@ class MonaLisa(Problem):
         return {'x': x, 'y': y, 'color': color}
 
     def plot_polygons(self, polygons):
-        print(polygons)
+        # print(polygons)
         fig, ax = plt.subplots(facecolor='black')  # Set the facecolor of the figure to black
         ax.set_xlim(0, self.canvas_size[0])
         ax.set_ylim(0, self.canvas_size[1])
@@ -114,5 +104,10 @@ class MonaLisa(Problem):
 
         ax.axis('off')  # Turn off the axis
         ax.grid(False)  # Turn off the grid lines
+
+        save_path = "/"
+
+        if save_path:
+            plt.savefig(save_path, bbox_inches='tight', pad_inches=0, facecolor=fig.get_facecolor(), transparent=True)
 
         plt.show()

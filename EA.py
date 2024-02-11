@@ -1,6 +1,6 @@
 from JSSP import JSSP
 from TSP import TSP
-# from MonaLisa import MonaLisa
+from MonaLisa import MonaLisa
 import matplotlib.pyplot as plt
 
 class EA: 
@@ -32,13 +32,15 @@ class EA:
             print("Invalid selection scheme")
             return
 
+
         for i in range(self.instance.iterations):
+            swaps = 1
             for j in range(self.instance.generations):
                 for k in range(0, self.instance.offspring_size, 2):
                     parents = parent_selection_function(p=True)
                     offsprings = self.instance.crossover(parents[0], parents[1])
-                    self.instance.population.append(self.instance.mutate(offsprings[0]))
-                    self.instance.population.append(self.instance.mutate(offsprings[1]))
+                    self.instance.population.append(self.instance.mutate(offsprings[0],swaps))
+                    self.instance.population.append(self.instance.mutate(offsprings[1],swaps))
                     self.instance.population.append(offsprings[0])
                     self.instance.population.append(offsprings[1])
                 survivors = survivor_selection_function(s=True)

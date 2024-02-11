@@ -2,8 +2,8 @@ import sys
 from EA import EA
 
 def main_test():
-    problem = "JSSP"
-    filename = "abz5"
+    problem = "MonaLisa"
+    filename = "mona_lisa.jpg"
     parent_selection = "random"
     survivor_selection = "truncation"
     pop_size = 1

@@ -46,17 +46,20 @@ class JSSP(Problem):
         return makespan
     
     def crossover(self, parent1, parent2):
-        crossover_point = np.random.randint(1,len(parent1[0])-1)
+        crossover_point = np.random.randint(1,len(parent1[0])//2)
+        crossover_point_2 = np.random.randint(len(parent1[0])//2,len(parent1[0])-1)
 
         first_half = parent1[0][:crossover_point] 
-        second_half = parent2[0][crossover_point:]
+        second_half = parent2[0][crossover_point:crossover_point_2]
+        third_half = parent1[0][crossover_point_2:]
         
-        offspring1 = self.make_unique(first_half, second_half)
+        offspring1 = self.make_unique(first_half, second_half, third_half)
 
         first_half = parent2[0][:crossover_point]
-        second_half = parent1[0][crossover_point:]
+        second_half = parent1[0][crossover_point:crossover_point_2]
+        third_half = parent2[0][crossover_point_2:]
 
-        offspring2 = self.make_unique(first_half, second_half)
+        offspring2 = self.make_unique(first_half, second_half,third_half)
 
         fitness1 = self.calculate_fitness(offspring1)
         fitness2 = self.calculate_fitness(offspring2)
@@ -64,7 +67,7 @@ class JSSP(Problem):
         offsprings = [(offspring1,fitness1),(offspring2,fitness2)]
         return offsprings
 
-    def make_unique(self, first_half, second_half):
+    def make_unique(self, first_half, second_half, third_half):
         occurences = dict()
         offspring  = first_half.copy()
         for i in first_half:
@@ -82,6 +85,15 @@ class JSSP(Problem):
                 occurences[i] = 1
                 offspring.append(i)
 
+        for i in third_half:
+            if i in occurences:
+                if occurences[i]<self.num_operations:
+                    occurences[i] += 1
+                    offspring.append(i)
+            else:
+                occurences[i] = 1
+                offspring.append(i)
+
         for i in occurences:
             if occurences[i]<self.num_operations:
                 for j in range(self.num_operations-occurences[i]):
@@ -89,13 +101,12 @@ class JSSP(Problem):
 
         return offspring
         
-    def mutate(self, chromosome):
+    def mutate(self, chromosome, swaps=1):
         # Perform mutation by swapping two jobs in the chromosome based on mutation rate
         jobs = chromosome[0].copy()  # Extract the jobs from the chromosome tuple
         fitness = chromosome[1]
 
         if np.random.random() < self.mutation_rate:
-            swaps = 1
             for i in range(swaps):
                 idx = np.random.randint(0, len(jobs), 2)
                 while idx[0] == idx[1]:
