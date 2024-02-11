@@ -1,5 +1,5 @@
 import random
-from PIL import Image, ImageDraw
+from PIL import Image
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.patches import Polygon
@@ -16,6 +16,7 @@ class MonaLisa(Problem):
 
     def calculate_fitness(self, polygons):
         # Calculate the fitness of a chromosome for the Mona Lisa problem
+        self.plot_polygons(polygons)
         img = Image.open("gen_mona.png")
 
         # Convert the images to numpy arrays
@@ -64,7 +65,7 @@ class MonaLisa(Problem):
         return (new_chromosome, fitness)
 
     def random_chromosome(self):
-        num_polygons = 5
+        num_polygons = 50
         polygons = []
         for i in range(num_polygons):
             x = [random.randint(0, self.canvas_size[0]) for j in range(3)]
@@ -79,7 +80,7 @@ class MonaLisa(Problem):
         return (polygons, fitness)
 
 
-    def plot_polygons(self,polygons):
+    def plot_polygons(self,polygons,save_path=None):
         fig, ax = plt.subplots(figsize=(self.canvas_size[0]/100, self.canvas_size[1]/100), facecolor='black')  
         ax.set_xlim(0, self.canvas_size[0])
         ax.set_ylim(0, self.canvas_size[1])
@@ -110,7 +111,10 @@ class MonaLisa(Problem):
         img = img.resize(self.canvas_size)  # Resize the image to the desired size
         img_array = np.array(img)
 
-        save_path = os.path.join(os.getcwd(), "gen_mona.png")
+        if save_path is None:
+            save_path = os.path.join(os.getcwd(), "gen_mona.png")
+        else:
+            save_path = os.path.join(os.getcwd(), save_path)
 
         plt.savefig(save_path, bbox_inches='tight', pad_inches=0, facecolor=fig.get_facecolor(), transparent=True)
         # plt.show()

@@ -85,11 +85,6 @@ class Problem():
             return parents
         if s:
             # Selects survivors using truncation selection
-            print("truncation")
-            print(len(self.population))
-            for i in self.population:
-                if i is None:
-                    print("None")
             survivors = sorted(self.population, key=lambda x: x[1])[:self.population_size]
             return survivors
 
