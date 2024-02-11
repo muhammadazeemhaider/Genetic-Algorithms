@@ -52,7 +52,7 @@ class EA:
             top_solutions.append((None, top_solution_iteration))  # Append the fitness value only
             self.instance.init_population()  # Reinitialize the population for the next iteration
 
-        self.plot_graph(top_solutions)
+        # self.plot_graph(top_solutions)
 
     def plot_graph(self, top_solutions):
 
