@@ -24,17 +24,24 @@ class TSP(Problem):
     
     def crossover(self,parent1, parent2):
         # Perform crossover to create a new chromosome from two parents
-        crossover_point = np.random.randint(1, len(parent1[0]) - 1)
+        crossover_point = np.random.randint(1, len(parent1[0])//2)
+        crossover_point_2 = np.random.randint(len(parent1[0])//2, len(parent1[0])-1)
 
         # Create a new chromosome by combining parts of both parents
         first_half = parent1[0][:crossover_point]
-        second_half = parent2[0][crossover_point:]
+        second_half = parent2[0][crossover_point:crossover_point_2]
+        third_half = parent1[0][crossover_point_2:]
+
         new_chromosome1 = first_half + [x for x in second_half if x not in first_half]
+        new_chromosome1 = new_chromosome1 + [x for x in third_half if x not in new_chromosome1]
         self.insert_missing(parent1,new_chromosome1)
 
         first_half = parent2[0][:crossover_point]
-        second_half = parent1[0][crossover_point:]
+        second_half = parent1[0][crossover_point:crossover_point_2]
+        third_half = parent2[0][crossover_point_2:]
+
         new_chromosome2 = first_half + [x for x in second_half if x not in first_half]
+        new_chromosome2 = new_chromosome2 + [x for x in third_half if x not in new_chromosome2]
         self.insert_missing(parent2,new_chromosome2)
 
         fitness1 = self.calculate_fitness(new_chromosome1)
