@@ -1,36 +1,34 @@
 import random
-from PIL import Image, ImageDraw
+from PIL import Image
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.patches import Polygon
 from problem import Problem
+import os
+import io
 
 class MonaLisa(Problem):
 
     def __init__(self, population_size, offspring_size, generations, mutation_rate, iterations, filename):
-        self.original_image = Image.open(filename)
+        self.original_image = Image.open(filename).convert('RGBA')
+        self.canvas_size = self.original_image.size
         super().__init__(population_size, offspring_size, generations, mutation_rate, iterations, filename)
 
     def calculate_fitness(self, polygons):
         # Calculate the fitness of a chromosome for the Mona Lisa problem
-        # Create a blank image with the same size as the original image
-        self.canvas_size = self.original_image.size
-        img = Image.new('RGB', self.canvas_size, color='black')
-        draw = ImageDraw.Draw(img, 'RGBA')
-
-        # Draw the polygons on the blank image
-        for polygon in polygons:
-            x = polygon['x']
-            y = polygon['y']
-            color = tuple(int(255 * c) for c in polygon['color'])
-            draw.polygon(list(zip(x, y)), fill=color)
+        self.plot_polygons(polygons)
+        img = Image.open("gen_mona.png")
 
         # Convert the images to numpy arrays
         original_array = np.array(self.original_image)
-        img_array = np.array(img)
+        fitness_array = np.array(img)
+
+        # print("Original array shape:", original_array.shape)
+        # print("Fitness array shape:", fitness_array.shape)
 
         # Calculate the fitness as the difference between the original and generated images
-        fitness = np.sum((original_array - img_array) ** 2)
+        fitness = np.sum((original_array - fitness_array) ** 2)
+        # print("printing fitness",fitness)
         return fitness
 
     def crossover(self, parent1, parent2):
@@ -38,48 +36,61 @@ class MonaLisa(Problem):
         crossover_point = random.randint(1, len(parent1))
 
         # Create a new chromosome by combining parts of both parents
-        child1 = parent1[:crossover_point] + parent2[crossover_point:]
-        child2 = parent2[:crossover_point] + parent1[crossover_point:]
+        child1 = parent1[0][:crossover_point] + parent2[0][crossover_point:]
+        child2 = parent2[0][:crossover_point] + parent1[0][crossover_point:]
 
         fitness1 = self.calculate_fitness(child1)
         fitness2 = self.calculate_fitness(child2)
 
         offsprings = [(child1, fitness1), (child2, fitness2)]
+        # print("in crossover",offsprings[0])
         return offsprings
 
+    def mutate(self,chromosome):
+
+        new_chromosome = chromosome[0].copy()
+        fitness = chromosome[1]
+        r = np.random.random()
+
+        if r<self.mutation_rate:
+            # print(chromosome)
+            new_chromosome.pop()
+            # Perform mutation by adding a new polygon to the chromosome
+            x = [random.randint(0, self.canvas_size[0]) for i in range(3)]
+            y = [random.randint(0, self.canvas_size[1]) for i in range(3)]
+            color = (random.random(), random.random(), random.random(), random.random())
+            new_chromosome.append({'x': x, 'y': y, 'color': color})
+            fitness = self.calculate_fitness(new_chromosome)
+
+        return (new_chromosome, fitness)
+
     def random_chromosome(self):
-        num_polygons = 5
-        canvas_size = (100, 100)
+        num_polygons = 50
         polygons = []
         for i in range(num_polygons):
-            x = [random.randint(0, canvas_size[0]) for j in range(3)]
-            y = [random.randint(0, canvas_size[1]) for j in range(3)]
+            x = [random.randint(0, self.canvas_size[0]) for j in range(3)]
+            y = [random.randint(0, self.canvas_size[1]) for j in range(3)]
             color = (random.random(), random.random(), random.random(), random.random())
             # color = 'blue'
             polygons.append({'x': x, 'y': y, 'color': color})
-        self.plot_polygons(polygons)
+        # self.plot_polygons(polygons)
         fitness = self.calculate_fitness(polygons)
-        print("printing random chromosome",fitness)
+        # print("printing random chromosome",fitness)
+        # print("printing random chromosome",polygons)
         return (polygons, fitness)
-    
-    def draw_polygons(self, polygons, canvas_size=(100, 100)):
-        canvas = Image.new('RGB', canvas_size)
-        canvas_pixels = np.array(canvas)
-        # Draw the polygons on a canvas and display the image
-        for polygon in polygons:
-            x = polygon['x']
-            y = polygon['y']
-            color = polygon['color']
 
 
-    def plot_polygons(self, polygons, canvas_size=(100, 100)):
-        print(polygons)
-        fig, ax = plt.subplots(facecolor='black')  # Set the facecolor of the figure to black
-        ax.set_xlim(0, canvas_size[0])
-        ax.set_ylim(0, canvas_size[1])
+    def plot_polygons(self,polygons,save_path=None):
+        fig, ax = plt.subplots(figsize=(self.canvas_size[0]/100, self.canvas_size[1]/100), facecolor='black')  
+        ax.set_xlim(0, self.canvas_size[0])
+        ax.set_ylim(0, self.canvas_size[1])
         ax.set_aspect('equal', 'box')
 
         for polygon in polygons:
+            try:
+                x = polygon['x']
+            except:
+                print(polygon)
             x = polygon['x']
             y = polygon['y']
             color = polygon['color']
@@ -87,15 +98,31 @@ class MonaLisa(Problem):
             poly = Polygon(np.column_stack([x, y]), closed=True, facecolor=color, edgecolor='none')
             ax.add_patch(poly)
 
-        ax.axis('off')  # Turn off the axis
-        ax.grid(False)  # Turn off the grid lines
+        ax.axis('off')  
+        ax.grid(False)  
 
-        save_path = "/"
+        plt.subplots_adjust(left=0, right=1, top=1, bottom=0)  # Adjust subplots to fill the entire figure area
 
-        if save_path:
-            plt.savefig(save_path, bbox_inches='tight', pad_inches=0, facecolor=fig.get_facecolor(), transparent=True)
+        buffer = io.BytesIO()  # Create a buffer to save the image
+        plt.savefig(buffer, format='png', bbox_inches='tight', pad_inches=0, facecolor='black', transparent=True)
+        buffer.seek(0)
 
-        plt.show()
+        img = Image.open(buffer)
+        img = img.resize(self.canvas_size)  # Resize the image to the desired size
+        img_array = np.array(img)
+
+        if save_path is None:
+            save_path = os.path.join(os.getcwd(), "gen_mona.png")
+        else:
+            save_path = os.path.join(os.getcwd(), save_path)
+
+        plt.savefig(save_path, bbox_inches='tight', pad_inches=0, facecolor=fig.get_facecolor(), transparent=True)
+        # plt.show()
+
+        plt.close(fig)  # Close the figure to free up memory
+
+        return img_array
+
 
 def plot_polygons(polygons, canvas_size=(100, 100)):
     print(polygons)

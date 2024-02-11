@@ -50,6 +50,8 @@ class EA:
                 survivors = survivor_selection_function(s=True)
                 self.instance.population = survivors
                 top_solution_generation = min(self.instance.population, key=lambda x: x[1])
+                if j == self.instance.generations - 1 and self.problem_name == "MonaLisa":
+                    self.instance.plot_polygons(top_solution_generation[0], f'gen_top.png')
                 print("Generation: ", j + 1)
                 print("Top solution for this iteration: ", top_solution_generation[1])  # Print the fitness value
                 top_solution_iteration = min(top_solution_iteration, top_solution_generation[1])  # Store fitness value only
