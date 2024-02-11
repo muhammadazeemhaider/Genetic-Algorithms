@@ -5,6 +5,8 @@
 \usepackage{titletoc}
 \usepackage{titlesec}
 \usepackage{listings}
+\usepackage{booktabs}
+\usepackage{adjustbox} % Add this line
 
 % Page setup
 \geometry{
@@ -132,8 +134,99 @@ The strategy to solve the job-shop scheduling problem was to use the same combin
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.65\textwidth]{images/Figure_2.png}
-    \caption{Job-shop Scheduling Problem: Combination 1}
+    \caption{Job-shop Scheduling Problem}
 \end{figure}
+
+The following graph Figure 3, has the same selection schemes and parameters, except for the fact that it is ran on 25 generations, to attach statistics for the Best Fitness and Average Fitness.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.65\textwidth]{images/JSSP_rntrbestscorelessgens.png}
+    \caption{Job-shop Scheduling Problem}
+\end{figure}
+
+The following tables highlight the scores between the generations for 10 iterations, and the best and average scores amongst the generations. 
+
+\begin{table}[h]
+    \centering
+    \caption{Generation-wise Fitness Scores}
+    \label{tab:fitness_scores}
+    \begin{adjustbox}{max width=0.97\textwidth} % Adjust the table width
+        \begin{tabular}{*{12}{c}}
+        \toprule
+        Generations & Iteration 1 & Iteration 2 & Iteration 3 & Iteration 4 & Iteration 5 & Iteration 6 & Iteration 7 & Iteration 8 & Iteration 9 & Iteration 10 & Best Fitness Score \\
+        \midrule
+        Gen 1 & 1718 & 1658 & 1741 & 1583 & 1640 & 1559 & 1656 & 1560 & 1533 & 1587 & 1533 \\
+        Gen 2 & 1622 & 1658 & 1699 & 1583 & 1640 & 1559 & 1656 & 1560 & 1533 & 1587 & 1533 \\
+        Gen 3 & 1622 & 1646 & 1699 & 1583 & 1640 & 1559 & 1656 & 1560 & 1533 & 1587 & 1533 \\
+        Gen 4 & 1622 & 1646 & 1699 & 1583 & 1640 & 1559 & 1656 & 1560 & 1533 & 1587 & 1533 \\
+        Gen 5 & 1622 & 1646 & 1699 & 1583 & 1640 & 1559 & 1656 & 1560 & 1533 & 1587 & 1533 \\
+        Gen 6 & 1622 & 1632 & 1654 & 1583 & 1640 & 1559 & 1656 & 1560 & 1533 & 1587 & 1533 \\
+        Gen 7 & 1622 & 1607 & 1631 & 1583 & 1640 & 1559 & 1656 & 1560 & 1533 & 1587 & 1533 \\
+        Gen 8 & 1588 & 1593 & 1631 & 1551 & 1640 & 1559 & 1601 & 1560 & 1533 & 1587 & 1533 \\
+        Gen 9 & 1588 & 1593 & 1631 & 1551 & 1582 & 1559 & 1601 & 1560 & 1533 & 1587 & 1533 \\
+        Gen 10 & 1588 & 1573 & 1631 & 1551 & 1582 & 1559 & 1601 & 1527 & 1533 & 1587 & 1527 \\
+        Gen 11 & 1588 & 1573 & 1631 & 1551 & 1582 & 1559 & 1601 & 1527 & 1533 & 1587 & 1527 \\
+        Gen 12 & 1588 & 1573 & 1502 & 1551 & 1582 & 1559 & 1601 & 1527 & 1533 & 1587 & 1502 \\
+        Gen 13 & 1588 & 1573 & 1502 & 1551 & 1582 & 1559 & 1601 & 1527 & 1533 & 1587 & 1502 \\
+        Gen 14 & 1588 & 1573 & 1502 & 1551 & 1582 & 1559 & 1601 & 1527 & 1533 & 1587 & 1502 \\
+        Gen 15 & 1588 & 1573 & 1502 & 1551 & 1582 & 1559 & 1601 & 1527 & 1533 & 1587 & 1502 \\
+        Gen 16 & 1588 & 1573 & 1502 & 1551 & 1582 & 1559 & 1601 & 1527 & 1533 & 1587 & 1502 \\
+        Gen 17 & 1588 & 1573 & 1502 & 1551 & 1582 & 1559 & 1601 & 1527 & 1533 & 1587 & 1502 \\
+        Gen 18 & 1588 & 1573 & 1502 & 1551 & 1582 & 1559 & 1601 & 1527 & 1529 & 1587 & 1502 \\
+        Gen 19 & 1574 & 1573 & 1502 & 1551 & 1582 & 1559 & 1601 & 1527 & 1501 & 1587 & 1501 \\
+        Gen 20 & 1574 & 1573 & 1502 & 1515 & 1540 & 1559 & 1601 & 1527 & 1501 & 1587 & 1501 \\
+        Gen 21 & 1574 & 1573 & 1502 & 1515 & 1540 & 1559 & 1579 & 1527 & 1501 & 1587 & 1501 \\
+        Gen 22 & 1574 & 1573 & 1502 & 1515 & 1540 & 1484 & 1579 & 1527 & 1501 & 1587 & 1484 \\
+        Gen 23 & 1574 & 1573 & 1502 & 1515 & 1540 & 1484 & 1579 & 1527 & 1501 & 1587 & 1484 \\
+        Gen 24 & 1574 & 1573 & 1502 & 1515 & 1540 & 1484 & 1579 & 1527 & 1501 & 1587 & 1484 \\
+        Gen 25 & 1574 & 1573 & 1502 & 1515 & 1540 & 1484 & 1579 & 1527 & 1501 & 1587 & 1484 \\
+        \bottomrule
+        \end{tabular}
+    \end{adjustbox}
+\end{table}
+
+\begin{table}[h]
+    \centering
+    \caption{Generation-wise Average Fitness Scores}
+    \label{tab:average_fitness_scores}
+    \begin{adjustbox}{max width=0.97\textwidth} % Adjust the table width
+        \begin{tabular}{*{12}{c}}
+            \toprule
+            Generations & Iteration 1 & Iteration 2 & Iteration 3 & Iteration 4 & Iteration 5 & Iteration 6 & Iteration 7 & Iteration 8 & Iteration 9 & Iteration 10 & Average Fitness Score \\
+            \midrule
+            Gen 1 & 1718 & 1658 & 1741 & 1583 & 1640 & 1559 & 1656 & 1560 & 1533 & 1587 & 1612.8 \\
+            Gen 2 & 1622 & 1658 & 1699 & 1583 & 1640 & 1559 & 1656 & 1560 & 1533 & 1587 & 1613.8 \\
+            Gen 3 & 1622 & 1646 & 1699 & 1583 & 1640 & 1559 & 1656 & 1560 & 1533 & 1587 & 1612.2 \\
+            Gen 4 & 1622 & 1646 & 1699 & 1583 & 1640 & 1559 & 1656 & 1560 & 1533 & 1587 & 1612.4 \\
+            Gen 5 & 1622 & 1646 & 1699 & 1583 & 1640 & 1559 & 1656 & 1560 & 1533 & 1587 & 1612.4 \\
+            Gen 6 & 1622 & 1632 & 1654 & 1583 & 1640 & 1559 & 1656 & 1560 & 1533 & 1587 & 1608.0 \\
+            Gen 7 & 1622 & 1607 & 1631 & 1583 & 1640 & 1559 & 1656 & 1560 & 1533 & 1587 & 1603.0 \\
+            Gen 8 & 1588 & 1593 & 1631 & 1551 & 1640 & 1559 & 1601 & 1560 & 1533 & 1587 & 1595.3 \\
+            Gen 9 & 1588 & 1593 & 1631 & 1551 & 1582 & 1559 & 1601 & 1560 & 1533 & 1587 & 1592.7 \\
+            Gen 10 & 1588 & 1573 & 1631 & 1551 & 1582 & 1559 & 1601 & 1527 & 1533 & 1587 & 1588.5 \\
+            Gen 11 & 1588 & 1573 & 1631 & 1551 & 1582 & 1559 & 1601 & 1527 & 1533 & 1587 & 1588.5 \\
+            Gen 12 & 1588 & 1573 & 1502 & 1551 & 1582 & 1559 & 1601 & 1527 & 1533 & 1587 & 1576.5 \\
+            Gen 13 & 1588 & 1573 & 1502 & 1551 & 1582 & 1559 & 1601 & 1527 & 1533 & 1587 & 1576.5 \\
+            Gen 14 & 1588 & 1573 & 1502 & 1551 & 1582 & 1559 & 1601 & 1527 & 1533 & 1587 & 1576.5 \\
+            Gen 15 & 1588 & 1573 & 1502 & 1551 & 1582 & 1559 & 1601 & 1527 & 1533 & 1587 & 1576.5 \\
+            Gen 16 & 1588 & 1573 & 1502 & 1551 & 1582 & 1559 & 1601 & 1527 & 1533 & 1587 & 1576.5 \\
+            Gen 17 & 1588 & 1573 & 1502 & 1551 & 1582 & 1559 & 1601 & 1527 & 1533 & 1587 & 1576.5 \\
+            Gen 18 & 1588 & 1573 & 1502 & 1551 & 1582 & 1559 & 1601 & 1527 & 1529 & 1587 & 1575.5 \\
+            Gen 19 & 1574 & 1573 & 1502 & 1551 & 1582 & 1559 & 1601 & 1527 & 1501 & 1587 & 1567.0 \\
+            Gen 20 & 1574 & 1573 & 1502 & 1515 & 1540 & 1559 & 1601 & 1527 & 1501 & 1587 & 1564.9 \\
+            Gen 21 & 1574 & 1573 & 1502 & 1515 & 1540 & 1559 & 1579 & 1527 & 1501 & 1587 & 1562.9 \\
+            Gen 22 & 1574 & 1573 & 1502 & 1515 & 1540 & 1484 & 1579 & 1527 & 1501 & 1587 & 1556.6 \\
+            Gen 23 & 1574 & 1573 & 1502 & 1515 & 1540 & 1484 & 1579 & 1527 & 1501 & 1587 & 1556.6 \\
+            Gen 24 & 1574 & 1573 & 1502 & 1515 & 1540 & 1484 & 1579 & 1527 & 1501 & 1587 & 1556.6 \\
+            Gen 25 & 1574 & 1573 & 1502 & 1515 & 1540 & 1484 & 1579 & 1527 & 1501 & 1587 & 1556.6 \\
+            \bottomrule
+        \end{tabular}
+    \end{adjustbox}
+\end{table}
+
+
+\newpage
 
 The ratio between population size and offsprings was tinkered with as well as the value of mutation rate. 
 Other combinations of schemes such as rank-based selection as parent selection and truncation as survival selection yielded the following result, \textbf{1253} which came very close to our best score. 
@@ -141,7 +234,7 @@ Other combinations of schemes such as rank-based selection as parent selection a
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.65\textwidth]{images/JSSP_rbstr150-40-2000-0.5-10.png}
-    \caption{Job-shop Scheduling Problem: Combination 2}
+    \caption{Job-shop Scheduling Problem}
 \end{figure}
 
 The following parameters were used to achieve the result in \textit{Figure 3}:
@@ -174,18 +267,67 @@ The best score for the input file ``abz6'' was \textbf{972}. Whereas, the best s
     \caption{Job-shop Scheduling Problem: Input file abz6}
 \end{figure}
 
+The following table and graph are generated on the same selection schemes and parameters, except for the fact that the generation suze is 25. 
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.6\textwidth]{images/JSSP_rntrbestscorelessgensABZ6.png}
+    \caption{Job-shop Scheduling Problem: Input file abz6}
+\end{figure}
+
+
+\begin{table}[h]
+    \centering
+    \caption{Generation-wise Best Fitness Scores for Input File \texttt{abz6}}
+    \label{tab:best_fitness_scores_abz6}
+    \begin{adjustbox}{max width=0.97\textwidth} % Adjust the table width
+        \begin{tabular}{*{12}{c}}
+            \toprule
+            Generations & Iteration 1 & Iteration 2 & Iteration 3 & Iteration 4 & Iteration 5 & Iteration 6 & Iteration 7 & Iteration 8 & Iteration 9 & Iteration 10 & Best Fitness Score \\
+            \midrule
+            Gen 1 & 1204 & 1240 & 1279 & 1224 & 1193 & 1288 & 1279 & 1214 & 1264 & 1231 & 1193 \\
+            Gen 2 & 1204 & 1240 & 1279 & 1224 & 1193 & 1288 & 1279 & 1214 & 1264 & 1231 & 1193 \\
+            Gen 3 & 1204 & 1240 & 1279 & 1224 & 1193 & 1288 & 1279 & 1214 & 1264 & 1231 & 1193 \\
+            Gen 4 & 1204 & 1172 & 1279 & 1224 & 1193 & 1288 & 1279 & 1214 & 1264 & 1231 & 1172 \\
+            Gen 5 & 1204 & 1172 & 1279 & 1224 & 1193 & 1273 & 1250 & 1214 & 1264 & 1231 & 1172 \\
+            Gen 6 & 1204 & 1172 & 1279 & 1224 & 1193 & 1273 & 1250 & 1214 & 1264 & 1231 & 1172 \\
+            Gen 7 & 1204 & 1172 & 1279 & 1224 & 1193 & 1273 & 1250 & 1214 & 1252 & 1231 & 1172 \\
+            Gen 8 & 1204 & 1172 & 1274 & 1190 & 1193 & 1273 & 1250 & 1176 & 1252 & 1231 & 1172 \\
+            Gen 9 & 1204 & 1172 & 1251 & 1190 & 1193 & 1273 & 1250 & 1176 & 1252 & 1231 & 1172 \\
+            Gen 10 & 1204 & 1172 & 1251 & 1190 & 1182 & 1273 & 1250 & 1176 & 1252 & 1231 & 1172 \\
+            Gen 11 & 1204 & 1172 & 1207 & 1190 & 1182 & 1273 & 1250 & 1176 & 1252 & 1231 & 1172 \\
+            Gen 12 & 1204 & 1172 & 1207 & 1190 & 1182 & 1273 & 1250 & 1176 & 1252 & 1231 & 1172 \\
+            Gen 13 & 1204 & 1172 & 1180 & 1190 & 1182 & 1273 & 1232 & 1176 & 1252 & 1231 & 1172 \\
+            Gen 14 & 1204 & 1172 & 1180 & 1190 & 1182 & 1273 & 1232 & 1176 & 1252 & 1214 & 1172 \\
+            Gen 15 & 1204 & 1172 & 1180 & 1190 & 1094 & 1232 & 1232 & 1176 & 1252 & 1214 & 1094 \\
+            Gen 16 & 1196 & 1172 & 1180 & 1190 & 1094 & 1232 & 1232 & 1176 & 1252 & 1214 & 1094 \\
+            Gen 17 & 1196 & 1172 & 1180 & 1190 & 1094 & 1232 & 1232 & 1176 & 1252 & 1214 & 1094 \\
+            Gen 18 & 1196 & 1172 & 1180 & 1190 & 1094 & 1232 & 1232 & 1176 & 1243 & 1214 & 1094 \\
+            Gen 19 & 1196 & 1172 & 1180 & 1190 & 1094 & 1232 & 1232 & 1176 & 1243 & 1214 & 1094 \\
+            Gen 20 & 1196 & 1172 & 1180 & 1173 & 1094 & 1211 & 1204 & 1176 & 1243 & 1214 & 1094 \\
+            Gen 21 & 1196 & 1172 & 1180 & 1173 & 1094 & 1211 & 1204 & 1176 & 1243 & 1214 & 1094 \\
+            Gen 22 & 1196 & 1172 & 1180 & 1173 & 1094 & 1211 & 1204 & 1176 & 1219 & 1214 & 1094 \\
+            Gen 23 & 1196 & 1172 & 1180 & 1173 & 1094 & 1211 & 1192 & 1176 & 1210 & 1214 & 1094 \\
+            Gen 24 & 1196 & 1172 & 1180 & 1173 & 1070 & 1211 & 1192 & 1131 & 1210 & 1214 & 1070 \\
+            Gen 25 & 1196 & 1172 & 1180 & 1173 & 1070 & 1211 & 1163 & 1131 & 1200 & 1193 & 1070 \\
+            \bottomrule
+        \end{tabular}
+    \end{adjustbox}
+\end{table}
+
+
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.6\textwidth]{images/abz7_rntr1000-200-500-0.45-10.png}
     \caption{Job-shop Scheduling Problem: Input file abz7}
 \end{figure}
 
-\section{Evolutionary Art: Mona Lisa}
+% \section{Evolutionary Art: Mona Lisa}
 
-\subsection{Problem Formulation}
+% \subsection{Problem Formulation}
 
 
 
-\subsection{Analysis}
+% \subsection{Analysis}
 
 \end{document}

@@ -61,12 +61,9 @@ class EA:
         self.plot_graph(top_solutions)
 
     def save_to_csv(self, top_solutions, generation_scores):
-        # Create a DataFrame from the top solutions
-        df = pd.DataFrame(top_solutions, columns=['Iteration', 'Best Fitness'])
-
         # Prepare a new DataFrame in the desired format
         generations = []
-        for gen in range(1, self.instance.generations + 1):
+        for gen in range(1, len(generation_scores[0]) + 1):
             gen_data = [f'Gen {gen}']  # Start with generation label
             for iteration in range(1, self.iterations + 1):
                 # Extract the fitness score for the current iteration and generation
@@ -82,7 +79,7 @@ class EA:
         new_df['Best Fitness Score'] = [min(row[1:]) for _, row in new_df.iterrows()]
 
         # Save the DataFrame to a CSV file
-        new_df.to_csv('top_solutions_transformed.csv', index=False)
+        new_df.to_csv('top_solutions_JSSP.csv', index=False)
 
     def plot_graph(self, top_solutions):
         # Plot the bar graph
@@ -92,7 +89,7 @@ class EA:
 
         # Add labels on top of bars
         for i, v in enumerate(y):
-            plt.text(x[i], v, str(v), ha='center', va='bottom')
+            plt.text(x[i], v, f'{int(v)}', ha='center', va='bottom')  # Display only integer values
 
         plt.xlabel('Iterations')
         plt.ylabel('Fitness Value', labelpad=0.001)  # Adjust labelpad here
